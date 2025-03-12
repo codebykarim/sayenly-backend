@@ -12,8 +12,9 @@ export const auth = betterAuth({
     openAPI(),
     bearer(),
     phoneNumber({
-      sendOTP: ({ phoneNumber, code }, request) => {
-        sendSMS(phoneNumber, code);
+      sendOTP: async ({ phoneNumber, code }, request) => {
+        console.log(code);
+        await sendSMS(phoneNumber, code);
       },
       signUpOnVerification: {
         getTempEmail: (phoneNumber) => {

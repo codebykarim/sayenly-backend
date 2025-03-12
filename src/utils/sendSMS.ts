@@ -1,5 +1,6 @@
 // Download the helper library from https://www.twilio.com/docs/node/install
 import twilio from "twilio"; // Or, for ESM: import twilio from "twilio";
+import AppError from "../errors/AppError";
 
 // Find your Account SID and Auth Token at twilio.com/console
 // and set the environment variables. See http://twil.io/secure
@@ -104,6 +105,6 @@ async function sendSMSFallback(phoneNumber: string, code: string) {
     return smsMessage;
   } catch (smsError) {
     console.error("SMS fallback also failed:", smsError);
-    throw new Error("Failed to send message via both WhatsApp and SMS");
+    throw new AppError("Failed to send message via both WhatsApp and SMS");
   }
 }
