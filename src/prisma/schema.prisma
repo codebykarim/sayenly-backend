@@ -9,14 +9,21 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+enum Nationality {
+  EMIRATI
+  OTHER
+}
+
 model User {
-  id            String    @id @unique @default(uuid())
+  id            String       @id @unique @default(uuid())
   name          String
   email         String
   emailVerified Boolean
   image         String?
   createdAt     DateTime
   updatedAt     DateTime
+  settings      Json?
+  nationality   Nationality? @default(OTHER)
   sessions      Session[]
   accounts      Account[]
 

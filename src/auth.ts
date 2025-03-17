@@ -14,7 +14,7 @@ export const auth = betterAuth({
     phoneNumber({
       sendOTP: async ({ phoneNumber, code }, request) => {
         console.log(code);
-        await sendSMS(phoneNumber, code);
+        // await sendSMS(phoneNumber, code);
       },
       signUpOnVerification: {
         getTempEmail: (phoneNumber) => {
@@ -26,4 +26,12 @@ export const auth = betterAuth({
       },
     }),
   ],
+  user: {
+    additionalFields: {
+      nationality: {
+        type: "string",
+        options: ["EMIRATI", "OTHER"],
+      },
+    },
+  },
 });
