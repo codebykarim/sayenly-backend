@@ -23,6 +23,10 @@ model User {
   createdAt     DateTime
   updatedAt     DateTime
   settings      Json?
+  role          String?
+  banned        Boolean?
+  banReason     String?
+  banExpires    Int?
   nationality   Nationality? @default(OTHER)
   sessions      Session[]
   accounts      Account[]
@@ -36,15 +40,16 @@ model User {
 }
 
 model Session {
-  id        String   @id @unique @default(uuid())
-  expiresAt DateTime
-  token     String
-  createdAt DateTime
-  updatedAt DateTime
-  ipAddress String?
-  userAgent String?
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String   @id @unique @default(uuid())
+  expiresAt      DateTime
+  token          String
+  createdAt      DateTime
+  updatedAt      DateTime
+  ipAddress      String?
+  userAgent      String?
+  userId         String
+  impersonatedBy String?
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([token])
   @@map("session")

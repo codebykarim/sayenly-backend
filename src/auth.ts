@@ -1,12 +1,12 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import prisma from "./prisma";
-import { bearer, openAPI, phoneNumber } from "better-auth/plugins";
+import { admin, bearer, openAPI, phoneNumber } from "better-auth/plugins";
 import { sendSMS } from "./utils/sendSMS";
 
 // Fixed OTP for test users
 const TEST_USERS: Record<string, string> = {
-  "+201021656119": "123456",
+  "+201021656119": "324894",
 };
 
 export const auth = betterAuth({
@@ -79,6 +79,7 @@ export const auth = betterAuth({
         },
       },
     }),
+    admin(),
   ],
   user: {
     additionalFields: {

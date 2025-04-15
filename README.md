@@ -27,7 +27,7 @@ push db changes
 
 - npx prisma db push
 
-npx prisma generate
-npx prisma format
-npx prisma migrate dev --name init
-npx prisma db push
+pnpm dlx prisma generate
+pnpm dlx prisma format
+pnpm dlx prisma migrate dev --name init
+pnpm dlx prisma db push
