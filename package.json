@@ -33,6 +33,7 @@
     "prisma": "^6.6.0",
     "supabase": "^1.178.2",
     "ts-node-dev": "^2.0.0",
+    "tsx": "^4.19.4",
     "typescript": "^5.3.3"
   },
   "dependencies": {
@@ -67,7 +68,7 @@
   },
   "prisma": {
     "schema": "src/prisma/schema.prisma",
-    "seed": "ts-node src/prisma/seed.ts"
+    "seed": "pnpm tsx src/prisma/seed.ts"
   },
   "packageManager": "pnpm@9.1.1"
 }

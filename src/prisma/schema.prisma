@@ -15,24 +15,27 @@ enum Nationality {
 }
 
 model User {
-  id            String       @id @unique @default(uuid())
-  name          String
-  email         String
-  emailVerified Boolean
-  image         String?
-  createdAt     DateTime
-  updatedAt     DateTime
-  settings      Json?
-  role          String?
-  banned        Boolean?
-  banReason     String?
-  banExpires    Int?
-  nationality   Nationality? @default(OTHER)
-  sessions      Session[]
-  accounts      Account[]
-
+  id                  String          @id @unique @default(uuid())
+  name                String
+  email               String
+  emailVerified       Boolean
+  image               String?
+  createdAt           DateTime
+  updatedAt           DateTime
+  settings            Json?
+  role                String?
+  banned              Boolean?
+  banReason           String?
+  banExpires          Int?
+  nationality         Nationality?    @default(OTHER)
+  sessions            Session[]
+  accounts            Account[]
+  bookings            Bookings[]
+  orders              Orders[]
+  notifications       Notifications[]
   phoneNumber         String?
   phoneNumberVerified Boolean?
+  Reviews             Reviews[]
 
   @@unique([email])
   @@unique([phoneNumber])
@@ -83,4 +86,156 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+model Projects {
+  id          String     @id @unique @default(uuid())
+  headline    String
+  description String
+  images      String[]
+  address     String
+  date        DateTime
+  inApp       Boolean    @default(false)
+  htmlContent Json
+  services    Services[]
+  areas       Areas[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Services {
+  id               String     @id @unique @default(uuid())
+  name             String
+  description      String
+  pastJobs         Int
+  serviceCardImage String?
+  inApp            Boolean    @default(false)
+  Projects         Projects[]
+  company          Company[]
+  bookings         Bookings[]
+  orders           Orders[]
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+}
+
+model Areas {
+  id        String     @id @unique @default(uuid())
+  name      String
+  areaImage String?
+  inApp     Boolean    @default(false)
+  Projects  Projects[]
+  Bookings  Bookings[]
+  Orders    Orders[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Faq {
+  id        String   @id @unique @default(uuid())
+  question  String
+  answer    String
+  inApp     Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Company {
+  id             String     @id @unique @default(uuid())
+  name           String
+  logo           String?
+  phoneNumbers   String[]
+  emailAddresses String[]
+  addresses      String[]
+  services       Services[]
+  pastBookings   Bookings[]
+  orders         Orders[]
+  totalEarnings  Float?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+}
+
+enum BookingStatus {
+  UPCOMING
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+model Bookings {
+  id                 String        @id @unique @default(uuid())
+  clientId           String
+  client             User          @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  services           Services[]
+  areas              Areas[]
+  issueDescription   String
+  attachments        String[]
+  address            String
+  schedule           DateTime
+  contactNumber      String
+  companyId          String
+  company            Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  bookingPrice       Float
+  status             BookingStatus @default(UPCOMING)
+  notes              Json?
+  cancellationReason String?
+  clientReview       Reviews?      @relation(fields: [reviewId], references: [id])
+  reviewId           String?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+}
+
+enum OrderStatus {
+  WAITING_QUOTE
+  WAITING_APPROVAL
+  REJECTED
+  CANCELLED
+}
+
+model Orders {
+  id               String      @id @unique @default(uuid())
+  clientId         String
+  client           User        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  services         Services[]
+  areas            Areas[]
+  issueDescription String
+  attachments      String[]
+  address          String
+  schedule         DateTime
+  contactNumber    String
+  companyId        String
+  company          Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  quote            Float?
+  status           OrderStatus @default(WAITING_QUOTE)
+  boq              Json?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+}
+
+enum NotificationType {
+  SAYENLY
+  REMINDER
+  QUOTE
+}
+
+model Notifications {
+  id        String           @id @unique @default(uuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message   String
+  read      Boolean          @default(false)
+  type      NotificationType
+  route     Json?
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+}
+
+model Reviews {
+  id        String     @id @unique @default(uuid())
+  clientId  String
+  client    User       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  rating    Int
+  review    String
+  Bookings  Bookings[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
