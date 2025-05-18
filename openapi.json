@@ -1,0 +1,4287 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Sayenly API Documentation",
+    "version": "1.0.0",
+    "description": "Documentation for Sayenly Backend API",
+    "contact": {
+      "name": "Sayenly Support",
+      "email": "support@sayenly.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "/api",
+      "description": "Development server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "UUID": {
+        "type": "string",
+        "format": "uuid",
+        "description": "A Universally Unique Identifier (UUID) v4",
+        "example": "123e4567-e89b-12d3-a456-426614174000"
+      },
+      "Email": {
+        "type": "string",
+        "format": "email",
+        "description": "A valid email address",
+        "example": "user@example.com"
+      },
+      "Date": {
+        "type": "string",
+        "format": "date",
+        "description": "A date string in ISO 8601 format (YYYY-MM-DD)",
+        "example": "2023-01-23"
+      },
+      "Time": {
+        "type": "string",
+        "format": "time",
+        "description": "A time string in ISO 8601 format (HH:MM:SS)",
+        "example": "14:30:00"
+      },
+      "DateTime": {
+        "type": "string",
+        "format": "date-time",
+        "description": "A date-time string in ISO 8601 format",
+        "example": "2023-01-23T14:30:00Z"
+      },
+      "URL": {
+        "type": "string",
+        "format": "uri",
+        "description": "A valid URL",
+        "example": "https://example.com/resource"
+      },
+      "JSON": {
+        "type": "object",
+        "description": "A JSON object",
+        "additionalProperties": true,
+        "example": {
+          "key": "value",
+          "nested": {
+            "data": 123
+          }
+        }
+      },
+      "PhoneNumber": {
+        "type": "string",
+        "description": "A phone number that complies with E.164 format",
+        "pattern": "^\\+?[1-9]\\d{1,14}$",
+        "example": "+12125551212"
+      },
+      "Area": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "inApp",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The auto-generated ID of the area"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the area"
+          },
+          "areaImage": {
+            "type": "string",
+            "description": "URL to the area's image"
+          },
+          "inApp": {
+            "type": "boolean",
+            "description": "Whether the area is visible in the app"
+          },
+          "Projects": {
+            "type": "array",
+            "description": "Projects related to this area",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "headline": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date the area was created"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date the area was last updated"
+          }
+        }
+      },
+      "Booking": {
+        "type": "object",
+        "required": [
+          "id",
+          "clientId",
+          "issueDescription",
+          "address",
+          "schedule",
+          "contactNumber",
+          "companyId",
+          "bookingPrice",
+          "status",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The auto-generated ID of the booking"
+          },
+          "clientId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the user who created the booking"
+          },
+          "services": {
+            "type": "array",
+            "description": "List of services included in the booking",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "areas": {
+            "type": "array",
+            "description": "List of areas included in the booking",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "issueDescription": {
+            "type": "string",
+            "description": "Description of the issue to be addressed"
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of attachment URLs"
+          },
+          "address": {
+            "type": "string",
+            "description": "Location address for the booking"
+          },
+          "schedule": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Scheduled date and time for the booking"
+          },
+          "contactNumber": {
+            "type": "string",
+            "description": "Contact number for the booking"
+          },
+          "companyId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the company providing the service"
+          },
+          "bookingPrice": {
+            "type": "number",
+            "description": "Price of the booking"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "UPCOMING",
+              "ONGOING",
+              "COMPLETED",
+              "CANCELLED"
+            ],
+            "description": "Current status of the booking"
+          },
+          "notes": {
+            "type": "object",
+            "description": "Additional notes for the booking"
+          },
+          "cancellationReason": {
+            "type": "string",
+            "description": "Reason for cancellation if booking is cancelled"
+          },
+          "reviewId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the associated review if any"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date the booking was created"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date the booking was last updated"
+          }
+        }
+      },
+      "Company": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "phoneNumbers",
+          "emailAddresses",
+          "addresses",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/UUID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the company"
+          },
+          "logo": {
+            "$ref": "#/components/schemas/URL",
+            "description": "URL to the company's logo"
+          },
+          "phoneNumbers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PhoneNumber"
+            },
+            "description": "List of phone numbers for the company"
+          },
+          "emailAddresses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Email"
+            },
+            "description": "List of email addresses for the company"
+          },
+          "addresses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of physical addresses for the company"
+          },
+          "services": {
+            "type": "array",
+            "description": "Services provided by this company",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "$ref": "#/components/schemas/UUID"
+                },
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "totalEarnings": {
+            "type": "number",
+            "description": "Total earnings for the company"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "updatedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          }
+        }
+      },
+      "FAQ": {
+        "type": "object",
+        "required": [
+          "id",
+          "question",
+          "answer",
+          "inApp",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The auto-generated ID of the FAQ"
+          },
+          "question": {
+            "type": "string",
+            "description": "The frequently asked question"
+          },
+          "answer": {
+            "type": "string",
+            "description": "The answer to the question"
+          },
+          "inApp": {
+            "type": "boolean",
+            "description": "Whether the FAQ is visible in the app"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date the FAQ was created"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date the FAQ was last updated"
+          }
+        }
+      },
+      "Notification": {
+        "type": "object",
+        "required": [
+          "id",
+          "userId",
+          "message",
+          "read",
+          "type",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The auto-generated ID of the notification"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the user this notification belongs to"
+          },
+          "message": {
+            "type": "string",
+            "description": "The notification message"
+          },
+          "read": {
+            "type": "boolean",
+            "description": "Whether the notification has been read"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "SAYENLY",
+              "REMINDER",
+              "QUOTE"
+            ],
+            "description": "The type of notification"
+          },
+          "route": {
+            "type": "object",
+            "description": "Optional route information for deep linking"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date the notification was created"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date the notification was last updated"
+          }
+        }
+      },
+      "Order": {
+        "type": "object",
+        "required": [
+          "id",
+          "clientId",
+          "issueDescription",
+          "address",
+          "schedule",
+          "contactNumber",
+          "companyId",
+          "status",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The auto-generated ID of the order"
+          },
+          "clientId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the user who created the order"
+          },
+          "services": {
+            "type": "array",
+            "description": "List of services included in the order",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "areas": {
+            "type": "array",
+            "description": "List of areas included in the order",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "issueDescription": {
+            "type": "string",
+            "description": "Description of the issue to be addressed"
+          },
+          "attachments": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of attachment URLs"
+          },
+          "address": {
+            "type": "string",
+            "description": "Location address for the order"
+          },
+          "schedule": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Scheduled date and time for the order"
+          },
+          "contactNumber": {
+            "type": "string",
+            "description": "Contact number for the order"
+          },
+          "companyId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the company providing the service"
+          },
+          "quote": {
+            "type": "number",
+            "description": "Price quote for the order"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "WAITING_QUOTE",
+              "WAITING_APPROVAL",
+              "REJECTED",
+              "CANCELLED"
+            ],
+            "description": "Current status of the order"
+          },
+          "boq": {
+            "type": "object",
+            "description": "Bill of quantities for the order"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date the order was created"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date the order was last updated"
+          }
+        }
+      },
+      "Project": {
+        "type": "object",
+        "required": [
+          "id",
+          "headline",
+          "description",
+          "images",
+          "address",
+          "date",
+          "htmlContent",
+          "inApp",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/UUID"
+          },
+          "headline": {
+            "type": "string",
+            "description": "Main headline for the project"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the project"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/URL"
+            },
+            "description": "List of image URLs for the project"
+          },
+          "address": {
+            "type": "string",
+            "description": "Location address of the project"
+          },
+          "date": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "inApp": {
+            "type": "boolean",
+            "description": "Whether the project is visible in the app"
+          },
+          "htmlContent": {
+            "$ref": "#/components/schemas/JSON",
+            "description": "Rich text content for the project"
+          },
+          "services": {
+            "type": "array",
+            "description": "Services related to this project",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "$ref": "#/components/schemas/UUID"
+                },
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "areas": {
+            "type": "array",
+            "description": "Areas related to this project",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "$ref": "#/components/schemas/UUID"
+                },
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/DateTime"
+          },
+          "updatedAt": {
+            "$ref": "#/components/schemas/DateTime"
+          }
+        }
+      },
+      "Review": {
+        "type": "object",
+        "required": [
+          "id",
+          "rating",
+          "review",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The auto-generated ID of the review"
+          },
+          "rating": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 5,
+            "description": "Rating from 1 to 5"
+          },
+          "review": {
+            "type": "string",
+            "description": "Text content of the review"
+          },
+          "clientId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the client who submitted the review"
+          },
+          "client": {
+            "type": "object",
+            "description": "Information about the client who submitted the review",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "name": {
+                "type": "string"
+              },
+              "profilePicture": {
+                "type": "string"
+              }
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date the review was created"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date the review was last updated"
+          }
+        }
+      },
+      "Service": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "description",
+          "pastJobs",
+          "inApp",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The auto-generated ID of the service"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the service"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the service"
+          },
+          "pastJobs": {
+            "type": "integer",
+            "description": "Number of past jobs completed for this service"
+          },
+          "serviceCardImage": {
+            "type": "string",
+            "description": "URL to the service's card image"
+          },
+          "inApp": {
+            "type": "boolean",
+            "description": "Whether the service is visible in the app"
+          },
+          "Projects": {
+            "type": "array",
+            "description": "Projects related to this service",
+            "items": {
+              "$ref": "#/components/schemas/Project"
+            }
+          },
+          "company": {
+            "type": "array",
+            "description": "Companies providing this service",
+            "items": {
+              "$ref": "#/components/schemas/Company"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date the service was created"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date the service was last updated"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "email",
+          "emailVerified",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The auto-generated ID of the user"
+          },
+          "name": {
+            "type": "string",
+            "description": "User's full name"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User's email"
+          },
+          "emailVerified": {
+            "type": "boolean",
+            "description": "Whether the user's email is verified"
+          },
+          "image": {
+            "type": "string",
+            "description": "URL to the user's profile image"
+          },
+          "nationality": {
+            "type": "string",
+            "enum": [
+              "EMIRATI",
+              "OTHER"
+            ],
+            "description": "User's nationality"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "User's phone number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date the user was created"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date the user was last updated"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "User",
+      "description": "User management endpoints"
+    },
+    {
+      "name": "Project",
+      "description": "Project management endpoints"
+    },
+    {
+      "name": "Service",
+      "description": "Service management endpoints"
+    },
+    {
+      "name": "Area",
+      "description": "Area management endpoints"
+    },
+    {
+      "name": "FAQ",
+      "description": "FAQ management endpoints"
+    },
+    {
+      "name": "Company",
+      "description": "Company management endpoints"
+    },
+    {
+      "name": "Booking",
+      "description": "Booking management endpoints"
+    },
+    {
+      "name": "Order",
+      "description": "Order management endpoints"
+    },
+    {
+      "name": "Notification",
+      "description": "Notification management endpoints"
+    },
+    {
+      "name": "Review",
+      "description": "Review management endpoints"
+    }
+  ],
+  "paths": {
+    "/area/get-all": {
+      "get": {
+        "summary": "Get all areas",
+        "tags": [
+          "Area"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all areas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Area"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/area/get-by-id": {
+      "get": {
+        "summary": "Get an area by ID",
+        "tags": [
+          "Area"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The area ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The area information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Area"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Area not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/area/create": {
+      "post": {
+        "summary": "Create a new area",
+        "tags": [
+          "Area"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the area"
+                  },
+                  "areaImage": {
+                    "type": "string",
+                    "description": "URL to the area's image"
+                  },
+                  "inApp": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether the area is visible in the app"
+                  },
+                  "Projects": {
+                    "type": "array",
+                    "description": "Projects to associate with this area",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Project ID"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The created area",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Area"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/area/update": {
+      "put": {
+        "summary": "Update an area",
+        "tags": [
+          "Area"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The area ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the area"
+                  },
+                  "areaImage": {
+                    "type": "string",
+                    "description": "URL to the area's image"
+                  },
+                  "inApp": {
+                    "type": "boolean",
+                    "description": "Whether the area is visible in the app"
+                  },
+                  "Projects": {
+                    "type": "array",
+                    "description": "Projects to associate with this area",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Project ID"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated area",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Area"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Area not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/area/delete": {
+      "delete": {
+        "summary": "Delete an area",
+        "tags": [
+          "Area"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The area ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Area deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Area not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/booking/get-all": {
+      "get": {
+        "summary": "Get all bookings",
+        "tags": [
+          "Booking"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all bookings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Booking"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/booking/get-by-id": {
+      "get": {
+        "summary": "Get a booking by ID",
+        "tags": [
+          "Booking"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The booking ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The booking information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Booking"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Booking not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/booking/create": {
+      "post": {
+        "summary": "Create a new booking",
+        "tags": [
+          "Booking"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "issueDescription",
+                  "address",
+                  "schedule",
+                  "contactNumber",
+                  "companyId",
+                  "bookingPrice",
+                  "services",
+                  "areas"
+                ],
+                "properties": {
+                  "issueDescription": {
+                    "type": "string",
+                    "description": "Description of the issue to be addressed"
+                  },
+                  "attachments": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "List of attachment URLs"
+                  },
+                  "address": {
+                    "type": "string",
+                    "description": "Location address for the booking"
+                  },
+                  "schedule": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Scheduled date and time for the booking"
+                  },
+                  "contactNumber": {
+                    "type": "string",
+                    "description": "Contact number for the booking"
+                  },
+                  "companyId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "The ID of the company providing the service"
+                  },
+                  "bookingPrice": {
+                    "type": "number",
+                    "description": "Price of the booking"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "UPCOMING",
+                      "ONGOING",
+                      "COMPLETED",
+                      "CANCELLED"
+                    ],
+                    "default": "UPCOMING",
+                    "description": "Status of the booking"
+                  },
+                  "notes": {
+                    "type": "object",
+                    "description": "Additional notes for the booking"
+                  },
+                  "cancellationReason": {
+                    "type": "string",
+                    "description": "Reason for cancellation if booking is cancelled"
+                  },
+                  "services": {
+                    "type": "array",
+                    "description": "List of services included in the booking",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Service ID"
+                        }
+                      }
+                    }
+                  },
+                  "areas": {
+                    "type": "array",
+                    "description": "List of areas included in the booking",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Area ID"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The created booking",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Booking"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/booking/update": {
+      "put": {
+        "summary": "Update a booking",
+        "tags": [
+          "Booking"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The booking ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "issueDescription": {
+                    "type": "string",
+                    "description": "Description of the issue to be addressed"
+                  },
+                  "attachments": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "List of attachment URLs"
+                  },
+                  "address": {
+                    "type": "string",
+                    "description": "Location address for the booking"
+                  },
+                  "schedule": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Scheduled date and time for the booking"
+                  },
+                  "contactNumber": {
+                    "type": "string",
+                    "description": "Contact number for the booking"
+                  },
+                  "companyId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "The ID of the company providing the service"
+                  },
+                  "bookingPrice": {
+                    "type": "number",
+                    "description": "Price of the booking"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "UPCOMING",
+                      "ONGOING",
+                      "COMPLETED",
+                      "CANCELLED"
+                    ],
+                    "description": "Status of the booking"
+                  },
+                  "notes": {
+                    "type": "object",
+                    "description": "Additional notes for the booking"
+                  },
+                  "cancellationReason": {
+                    "type": "string",
+                    "description": "Reason for cancellation if booking is cancelled"
+                  },
+                  "services": {
+                    "type": "array",
+                    "description": "List of services included in the booking",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Service ID"
+                        }
+                      }
+                    }
+                  },
+                  "areas": {
+                    "type": "array",
+                    "description": "List of areas included in the booking",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Area ID"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated booking",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Booking"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Booking not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/booking/delete": {
+      "delete": {
+        "summary": "Delete a booking",
+        "tags": [
+          "Booking"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The booking ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Booking deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Booking not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/company/get-all": {
+      "get": {
+        "summary": "Get all companies",
+        "tags": [
+          "Company"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all companies",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Company"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/company/get-by-id": {
+      "get": {
+        "summary": "Get a company by ID",
+        "tags": [
+          "Company"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            },
+            "description": "The company ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The company information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Company"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Company not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/company/create": {
+      "post": {
+        "summary": "Create a new company",
+        "tags": [
+          "Company"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "phoneNumbers",
+                  "emailAddresses",
+                  "addresses"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the company"
+                  },
+                  "logo": {
+                    "$ref": "#/components/schemas/URL",
+                    "description": "URL to the company's logo"
+                  },
+                  "phoneNumbers": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/PhoneNumber"
+                    },
+                    "description": "List of phone numbers for the company"
+                  },
+                  "emailAddresses": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Email"
+                    },
+                    "description": "List of email addresses for the company"
+                  },
+                  "addresses": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "List of physical addresses for the company"
+                  },
+                  "services": {
+                    "type": "array",
+                    "description": "Services to associate with this company",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "$ref": "#/components/schemas/UUID"
+                        }
+                      }
+                    }
+                  },
+                  "totalEarnings": {
+                    "type": "number",
+                    "description": "Total earnings for the company"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The created company",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Company"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/company/update": {
+      "put": {
+        "summary": "Update a company",
+        "tags": [
+          "Company"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            },
+            "description": "The company ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the company"
+                  },
+                  "logo": {
+                    "$ref": "#/components/schemas/URL",
+                    "description": "URL to the company's logo"
+                  },
+                  "phoneNumbers": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/PhoneNumber"
+                    },
+                    "description": "List of phone numbers for the company"
+                  },
+                  "emailAddresses": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Email"
+                    },
+                    "description": "List of email addresses for the company"
+                  },
+                  "addresses": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "List of physical addresses for the company"
+                  },
+                  "services": {
+                    "type": "array",
+                    "description": "Services to associate with this company",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "$ref": "#/components/schemas/UUID"
+                        }
+                      }
+                    }
+                  },
+                  "totalEarnings": {
+                    "type": "number",
+                    "description": "Total earnings for the company"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated company",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Company"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Company not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/company/delete": {
+      "delete": {
+        "summary": "Delete a company",
+        "tags": [
+          "Company"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            },
+            "description": "The company ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Company deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Company not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/faq/get-all": {
+      "get": {
+        "summary": "Get all FAQs",
+        "tags": [
+          "FAQ"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all FAQs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FAQ"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/faq/get-by-id": {
+      "get": {
+        "summary": "Get a FAQ by ID",
+        "tags": [
+          "FAQ"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The FAQ ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The FAQ information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FAQ"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "FAQ not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/faq/create": {
+      "post": {
+        "summary": "Create a new FAQ",
+        "tags": [
+          "FAQ"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "question",
+                  "answer"
+                ],
+                "properties": {
+                  "question": {
+                    "type": "string",
+                    "description": "The frequently asked question"
+                  },
+                  "answer": {
+                    "type": "string",
+                    "description": "The answer to the question"
+                  },
+                  "inApp": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether the FAQ is visible in the app"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The created FAQ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FAQ"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/faq/update": {
+      "put": {
+        "summary": "Update a FAQ",
+        "tags": [
+          "FAQ"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The FAQ ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "question": {
+                    "type": "string",
+                    "description": "The frequently asked question"
+                  },
+                  "answer": {
+                    "type": "string",
+                    "description": "The answer to the question"
+                  },
+                  "inApp": {
+                    "type": "boolean",
+                    "description": "Whether the FAQ is visible in the app"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated FAQ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FAQ"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "FAQ not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/faq/delete": {
+      "delete": {
+        "summary": "Delete a FAQ",
+        "tags": [
+          "FAQ"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The FAQ ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "FAQ deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "FAQ not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/notification/get-all": {
+      "get": {
+        "summary": "Get all notifications",
+        "tags": [
+          "Notification"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all notifications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Notification"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/notification/get-by-id": {
+      "get": {
+        "summary": "Get a notification by ID",
+        "tags": [
+          "Notification"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The notification ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The notification information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Notification not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/notification/create": {
+      "post": {
+        "summary": "Create a new notification",
+        "tags": [
+          "Notification"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "message",
+                  "type"
+                ],
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "The notification message"
+                  },
+                  "read": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether the notification has been read"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "SAYENLY",
+                      "REMINDER",
+                      "QUOTE"
+                    ],
+                    "description": "The type of notification"
+                  },
+                  "route": {
+                    "type": "object",
+                    "description": "Optional route information for deep linking"
+                  },
+                  "userId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "The ID of the user this notification belongs to (defaults to authenticated user if not provided)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The created notification",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/notification/update": {
+      "put": {
+        "summary": "Update a notification",
+        "tags": [
+          "Notification"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The notification ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "The notification message"
+                  },
+                  "read": {
+                    "type": "boolean",
+                    "description": "Whether the notification has been read"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "SAYENLY",
+                      "REMINDER",
+                      "QUOTE"
+                    ],
+                    "description": "The type of notification"
+                  },
+                  "route": {
+                    "type": "object",
+                    "description": "Optional route information for deep linking"
+                  },
+                  "userId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "The ID of the user this notification belongs to"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated notification",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Notification not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/notification/delete": {
+      "delete": {
+        "summary": "Delete a notification",
+        "tags": [
+          "Notification"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The notification ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Notification not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/notification/send-system": {
+      "post": {
+        "summary": "Send a system notification to a user",
+        "tags": [
+          "Notification"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "userId",
+                  "message"
+                ],
+                "properties": {
+                  "userId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "The ID of the user to send the notification to"
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "The notification message"
+                  },
+                  "route": {
+                    "type": "object",
+                    "description": "Optional route information for deep linking"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Notification sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/notification/send-bulk": {
+      "post": {
+        "summary": "Send notifications to multiple users or all users",
+        "tags": [
+          "Notification"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "message"
+                ],
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "The notification message"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "SAYENLY",
+                      "REMINDER",
+                      "QUOTE"
+                    ],
+                    "default": "SAYENLY",
+                    "description": "The type of notification"
+                  },
+                  "userIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "description": "Array of user IDs to send notifications to. If omitted, sends to all users."
+                  },
+                  "route": {
+                    "type": "object",
+                    "description": "Optional route information for deep linking"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Notifications sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "results": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer",
+                          "description": "Total number of users targeted"
+                        },
+                        "dbNotifications": {
+                          "type": "integer",
+                          "description": "Number of database notifications sent"
+                        },
+                        "pushNotifications": {
+                          "type": "integer",
+                          "description": "Number of push notifications sent"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/order/get-all": {
+      "get": {
+        "summary": "Get all orders",
+        "tags": [
+          "Order"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all orders",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Order"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/order/get-by-id": {
+      "get": {
+        "summary": "Get an order by ID",
+        "tags": [
+          "Order"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The order ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The order information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Order not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/order/create": {
+      "post": {
+        "summary": "Create a new order",
+        "tags": [
+          "Order"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "issueDescription",
+                  "address",
+                  "schedule",
+                  "contactNumber",
+                  "companyId",
+                  "services",
+                  "areas"
+                ],
+                "properties": {
+                  "issueDescription": {
+                    "type": "string",
+                    "description": "Description of the issue to be addressed"
+                  },
+                  "attachments": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "List of attachment URLs"
+                  },
+                  "address": {
+                    "type": "string",
+                    "description": "Location address for the order"
+                  },
+                  "schedule": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Scheduled date and time for the order"
+                  },
+                  "contactNumber": {
+                    "type": "string",
+                    "description": "Contact number for the order"
+                  },
+                  "companyId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "The ID of the company providing the service"
+                  },
+                  "quote": {
+                    "type": "number",
+                    "description": "Price quote for the order"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "WAITING_QUOTE",
+                      "WAITING_APPROVAL",
+                      "REJECTED",
+                      "CANCELLED"
+                    ],
+                    "default": "WAITING_QUOTE",
+                    "description": "Status of the order"
+                  },
+                  "boq": {
+                    "type": "object",
+                    "description": "Bill of quantities for the order"
+                  },
+                  "services": {
+                    "type": "array",
+                    "description": "List of services included in the order",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Service ID"
+                        }
+                      }
+                    }
+                  },
+                  "areas": {
+                    "type": "array",
+                    "description": "List of areas included in the order",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Area ID"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The created order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/order/update": {
+      "put": {
+        "summary": "Update an order",
+        "tags": [
+          "Order"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The order ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "issueDescription": {
+                    "type": "string",
+                    "description": "Description of the issue to be addressed"
+                  },
+                  "attachments": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "List of attachment URLs"
+                  },
+                  "address": {
+                    "type": "string",
+                    "description": "Location address for the order"
+                  },
+                  "schedule": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Scheduled date and time for the order"
+                  },
+                  "contactNumber": {
+                    "type": "string",
+                    "description": "Contact number for the order"
+                  },
+                  "companyId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "The ID of the company providing the service"
+                  },
+                  "quote": {
+                    "type": "number",
+                    "description": "Price quote for the order"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "WAITING_QUOTE",
+                      "WAITING_APPROVAL",
+                      "REJECTED",
+                      "CANCELLED"
+                    ],
+                    "description": "Status of the order"
+                  },
+                  "boq": {
+                    "type": "object",
+                    "description": "Bill of quantities for the order"
+                  },
+                  "services": {
+                    "type": "array",
+                    "description": "List of services included in the order",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Service ID"
+                        }
+                      }
+                    }
+                  },
+                  "areas": {
+                    "type": "array",
+                    "description": "List of areas included in the order",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Area ID"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Order not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/order/delete": {
+      "delete": {
+        "summary": "Delete an order",
+        "tags": [
+          "Order"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The order ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Order not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/project/get-all": {
+      "get": {
+        "summary": "Get all projects",
+        "tags": [
+          "Project"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all projects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Project"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/project/get-by-id": {
+      "get": {
+        "summary": "Get a project by ID",
+        "tags": [
+          "Project"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            },
+            "description": "The project ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The project information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Project not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/project/create": {
+      "post": {
+        "summary": "Create a new project",
+        "tags": [
+          "Project"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "headline",
+                  "description",
+                  "images",
+                  "address",
+                  "date",
+                  "htmlContent"
+                ],
+                "properties": {
+                  "headline": {
+                    "type": "string",
+                    "description": "Main headline for the project"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Description of the project"
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/URL"
+                    },
+                    "description": "List of image URLs for the project"
+                  },
+                  "address": {
+                    "type": "string",
+                    "description": "Location address of the project"
+                  },
+                  "date": {
+                    "$ref": "#/components/schemas/DateTime"
+                  },
+                  "inApp": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether the project is visible in the app"
+                  },
+                  "htmlContent": {
+                    "$ref": "#/components/schemas/JSON",
+                    "description": "Rich text content for the project"
+                  },
+                  "services": {
+                    "type": "array",
+                    "description": "Services to associate with this project",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "$ref": "#/components/schemas/UUID"
+                        }
+                      }
+                    }
+                  },
+                  "areas": {
+                    "type": "array",
+                    "description": "Areas to associate with this project",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "$ref": "#/components/schemas/UUID"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The created project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/project/update": {
+      "put": {
+        "summary": "Update a project",
+        "tags": [
+          "Project"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            },
+            "description": "The project ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "headline": {
+                    "type": "string",
+                    "description": "Main headline for the project"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Description of the project"
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/URL"
+                    },
+                    "description": "List of image URLs for the project"
+                  },
+                  "address": {
+                    "type": "string",
+                    "description": "Location address of the project"
+                  },
+                  "date": {
+                    "$ref": "#/components/schemas/DateTime"
+                  },
+                  "inApp": {
+                    "type": "boolean",
+                    "description": "Whether the project is visible in the app"
+                  },
+                  "htmlContent": {
+                    "$ref": "#/components/schemas/JSON",
+                    "description": "Rich text content for the project"
+                  },
+                  "services": {
+                    "type": "array",
+                    "description": "Services to associate with this project",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "$ref": "#/components/schemas/UUID"
+                        }
+                      }
+                    }
+                  },
+                  "areas": {
+                    "type": "array",
+                    "description": "Areas to associate with this project",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "$ref": "#/components/schemas/UUID"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated project",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Project not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/project/delete": {
+      "delete": {
+        "summary": "Delete a project",
+        "tags": [
+          "Project"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UUID"
+            },
+            "description": "The project ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Project not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/review/get-all": {
+      "get": {
+        "summary": "Get all reviews",
+        "tags": [
+          "Review"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all reviews",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Review"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/review/get-by-id": {
+      "get": {
+        "summary": "Get a review by ID",
+        "tags": [
+          "Review"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The review ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The review information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Review"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Review not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/review/create": {
+      "post": {
+        "summary": "Create a new review",
+        "tags": [
+          "Review"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rating",
+                  "review"
+                ],
+                "properties": {
+                  "rating": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 5,
+                    "description": "Rating from 1 to 5"
+                  },
+                  "review": {
+                    "type": "string",
+                    "description": "Text content of the review"
+                  },
+                  "clientId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "ID of the client who is submitting the review"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The created review",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Review"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/review/update": {
+      "put": {
+        "summary": "Update a review",
+        "tags": [
+          "Review"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The review ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "rating": {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 5,
+                    "description": "Rating from 1 to 5"
+                  },
+                  "review": {
+                    "type": "string",
+                    "description": "Text content of the review"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated review",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Review"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Review not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/review/delete": {
+      "delete": {
+        "summary": "Delete a review",
+        "tags": [
+          "Review"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The review ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Review deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Review not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/service/get-all": {
+      "get": {
+        "summary": "Get all services",
+        "tags": [
+          "Service"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all services",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Service"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/service/get-by-id": {
+      "get": {
+        "summary": "Get a service by ID",
+        "tags": [
+          "Service"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The service ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The service information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Service"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Service not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/service/create": {
+      "post": {
+        "summary": "Create a new service",
+        "tags": [
+          "Service"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "description",
+                  "pastJobs"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the service"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Description of the service"
+                  },
+                  "pastJobs": {
+                    "type": "integer",
+                    "description": "Number of past jobs completed for this service"
+                  },
+                  "serviceCardImage": {
+                    "type": "string",
+                    "description": "URL to the service's card image"
+                  },
+                  "inApp": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether the service is visible in the app"
+                  },
+                  "Projects": {
+                    "type": "array",
+                    "description": "Projects to associate with this service",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Project ID"
+                        }
+                      }
+                    }
+                  },
+                  "company": {
+                    "type": "array",
+                    "description": "Companies providing this service",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Company ID"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The created service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Service"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/service/update": {
+      "put": {
+        "summary": "Update a service",
+        "tags": [
+          "Service"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The service ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the service"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Description of the service"
+                  },
+                  "pastJobs": {
+                    "type": "integer",
+                    "description": "Number of past jobs completed for this service"
+                  },
+                  "serviceCardImage": {
+                    "type": "string",
+                    "description": "URL to the service's card image"
+                  },
+                  "inApp": {
+                    "type": "boolean",
+                    "description": "Whether the service is visible in the app"
+                  },
+                  "Projects": {
+                    "type": "array",
+                    "description": "Projects to associate with this service",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Project ID"
+                        }
+                      }
+                    }
+                  },
+                  "company": {
+                    "type": "array",
+                    "description": "Companies providing this service",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Company ID"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated service",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Service"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Service not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/service/delete": {
+      "delete": {
+        "summary": "Delete a service",
+        "tags": [
+          "Service"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The service ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Service deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Service not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/user/get-all": {
+      "get": {
+        "summary": "Get all users",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/user/get-by-id": {
+      "get": {
+        "summary": "Get a user by ID",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The user ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/user/update": {
+      "put": {
+        "summary": "Update a user",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The user ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string"
+                  },
+                  "settings": {
+                    "type": "object"
+                  },
+                  "nationality": {
+                    "type": "string",
+                    "enum": [
+                      "EMIRATI",
+                      "OTHER"
+                    ]
+                  },
+                  "phoneNumber": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/user/delete": {
+      "delete": {
+        "summary": "Delete a user",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The user ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/user/update-fcm-token": {
+      "post": {
+        "summary": "Update the FCM token for a user (deprecated)",
+        "description": "Update a single FCM token for push notifications. This method is deprecated, use register-device instead.",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "fcmToken"
+                ],
+                "properties": {
+                  "fcmToken": {
+                    "type": "string",
+                    "description": "The Firebase Cloud Messaging token"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "FCM token updated successfully"
+          },
+          "400": {
+            "description": "Bad request - FCM token is required"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/user/register-device": {
+      "post": {
+        "summary": "Register a device for push notifications",
+        "description": "Register a device to receive push notifications. Multiple devices can be registered per user.",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "deviceToken"
+                ],
+                "properties": {
+                  "deviceToken": {
+                    "type": "string",
+                    "description": "The Firebase Cloud Messaging device token"
+                  },
+                  "deviceInfo": {
+                    "type": "object",
+                    "properties": {
+                      "platform": {
+                        "type": "string",
+                        "description": "The device platform (e.g., iOS, Android)"
+                      },
+                      "osVersion": {
+                        "type": "string",
+                        "description": "The operating system version"
+                      },
+                      "model": {
+                        "type": "string",
+                        "description": "The device model"
+                      },
+                      "appVersion": {
+                        "type": "string",
+                        "description": "The app version"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Device registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "deviceCount": {
+                      "type": "integer",
+                      "description": "Number of registered devices for this user"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Device token is required"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/user/unregister-device": {
+      "post": {
+        "summary": "Unregister a device to stop push notifications",
+        "description": "Unregister a device to stop receiving push notifications.",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "deviceToken"
+                ],
+                "properties": {
+                  "deviceToken": {
+                    "type": "string",
+                    "description": "The Firebase Cloud Messaging device token to unregister"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Device unregistered successfully or no device found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "deviceCount": {
+                      "type": "integer",
+                      "description": "Remaining number of registered devices for this user"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Device token is required"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    }
+  }
+}
