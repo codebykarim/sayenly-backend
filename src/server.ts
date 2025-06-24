@@ -13,7 +13,7 @@ import { auth } from "./auth";
 import { processUpcomingBookingReminders } from "./utils/scheduler";
 import * as schedule from "node-schedule";
 import swaggerSpec from "./utils/swagger";
-import { apiReference } from "@scalar/express-api-reference";
+// import { apiReference } from "@scalar/express-api-reference";
 
 config();
 
@@ -29,20 +29,20 @@ app.use(pkg.urlencoded({ extended: true }));
 app.use(pkg.json());
 app.set("trust proxy", true);
 
-app.use(
-  "/api/docs",
-  apiReference({
-    spec: {
-      content: swaggerSpec,
-    },
-    title: "Saynly API",
-    theme: "default",
-    logo: {
-      url: "/logo.png",
-      altText: "Saynly Logo",
-    },
-  })
-);
+// app.use(
+//   "/api/docs",
+//   apiReference({
+//     spec: {
+//       content: swaggerSpec,
+//     },
+//     title: "Saynly API",
+//     theme: "default",
+//     logo: {
+//       url: "/logo.png",
+//       altText: "Saynly Logo",
+//     },
+//   })
+// );
 
 // Keep the JSON endpoint for direct access to the OpenAPI spec
 app.get("/api/docs.json", (req: Request, res: Response) => {
