@@ -83,7 +83,7 @@ const reviewMethods: { [key: string]: MethodInfo } = {
   "get-all": {
     httpMethod: "GET",
     controllerFunction: ReviewController.getAllReviewsController,
-    authFunction: isAuth,
+    // authFunction: isAuth,
   },
   /**
    * @swagger
@@ -171,7 +171,7 @@ const reviewMethods: { [key: string]: MethodInfo } = {
     bodyValidation: {
       rating: joi.number().min(1).max(5).required(),
       review: joi.string().required(),
-      clientId: joi.string().guid().optional(),
+      clientId: joi.string().optional(),
     },
   },
   /**

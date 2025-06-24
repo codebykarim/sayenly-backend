@@ -38,11 +38,6 @@ export const createReviewController = async (req: Request, res: Response) => {
   try {
     const reviewData = req.body;
 
-    // Set clientId to logged in user if not provided
-    if (!reviewData.clientId && req.user?.id) {
-      reviewData.client = { connect: { id: req.user.id } };
-    }
-
     const review = await createReview(reviewData);
     return controllerReturn(review, req, res);
   } catch (error: any) {

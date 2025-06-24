@@ -87,7 +87,7 @@ const serviceMethods: { [key: string]: MethodInfo } = {
   "get-all": {
     httpMethod: "GET",
     controllerFunction: ServiceController.getAllServicesController,
-    authFunction: isAuth,
+    // authFunction: isAuth,
   },
   /**
    * @swagger
@@ -203,9 +203,11 @@ const serviceMethods: { [key: string]: MethodInfo } = {
     authFunction: isAuth,
     bodyValidation: {
       name: joi.string().required(),
+      nameAr: joi.string().required(),
       description: joi.string().required(),
+      descriptionAr: joi.string().required(),
       pastJobs: joi.number().required(),
-      serviceCardImage: joi.string().optional(),
+      serviceCardImage: joi.string().optional().allow(null),
       inApp: joi.boolean().optional().default(false),
       Projects: joi
         .array()

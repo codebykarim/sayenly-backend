@@ -70,7 +70,7 @@ const faqMethods: { [key: string]: MethodInfo } = {
   "get-all": {
     httpMethod: "GET",
     controllerFunction: FaqController.getAllFaqsController,
-    authFunction: isAuth,
+    // authFunction: isAuth,
   },
   /**
    * @swagger
@@ -155,7 +155,9 @@ const faqMethods: { [key: string]: MethodInfo } = {
     authFunction: isAuth,
     bodyValidation: {
       question: joi.string().required(),
+      questionAr: joi.string().required(),
       answer: joi.string().required(),
+      answerAr: joi.string().required(),
       inApp: joi.boolean().optional().default(false),
     },
   },

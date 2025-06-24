@@ -200,6 +200,7 @@ const companyMethods: { [key: string]: MethodInfo } = {
     authFunction: isAuth,
     bodyValidation: {
       name: joi.string().required(),
+      nameAr: joi.string().required(),
       logo: joi.string().optional(),
       phoneNumbers: joi.array().items(joi.string()).required(),
       emailAddresses: joi.array().items(joi.string().email()).required(),

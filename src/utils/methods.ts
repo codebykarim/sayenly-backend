@@ -46,6 +46,7 @@ export const init = (methods: { [key: string]: MethodInfo }) => {
         const schema = joi.object(methodInfo.bodyValidation);
         const { error } = schema.validate(req.body);
         if (error) {
+          console.log(error);
           throw new AppError("ERR_BODY_VALIDATION", 400);
         }
       }

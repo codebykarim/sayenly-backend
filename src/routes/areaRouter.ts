@@ -80,7 +80,7 @@ const areaMethods: { [key: string]: MethodInfo } = {
   "get-all": {
     httpMethod: "GET",
     controllerFunction: AreaController.getAllAreasController,
-    authFunction: isAuth,
+    // authFunction: isAuth,
   },
   /**
    * @swagger
@@ -176,6 +176,7 @@ const areaMethods: { [key: string]: MethodInfo } = {
     authFunction: isAuth,
     bodyValidation: {
       name: joi.string().required(),
+      nameAr: joi.string().required(),
       areaImage: joi.string().optional(),
       inApp: joi.boolean().optional().default(false),
       Projects: joi

@@ -108,6 +108,7 @@ model Services {
   name             String
   nameAr           String?
   description      String
+  descriptionAr    String?
   pastJobs         Int
   serviceCardImage String?
   inApp            Boolean    @default(false)
@@ -246,7 +247,6 @@ model Reviews {
   client    User       @relation(fields: [clientId], references: [id], onDelete: Cascade)
   rating    Int
   review    String
-  reviewAr  String?
   Bookings  Bookings[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
