@@ -222,6 +222,15 @@ model Orders {
   type             OrderType   @default(NEW)
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
+
+  @@index([clientId])
+  @@index([companyId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@index([clientId, status]) // Compound index for user's orders by status
+  @@index([companyId, status]) // Compound index for company's orders by status
+  @@index([status, createdAt]) // Compound index for status with date sorting
 }
 
 enum NotificationType {

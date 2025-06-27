@@ -2,13 +2,18 @@ import { Request, Response } from "express";
 import { BookingStatus } from "@prisma/client";
 import controllerReturn from "../utils/successReturn";
 import { getAllOrders } from "../services/order/getAll";
-import { getOrderById } from "../services/order/getById";
+import { getOrderById, getOrderForQuoteCheck } from "../services/order/getById";
 import { createOrder } from "../services/order/create";
-import { updateOrder } from "../services/order/update";
+import { updateOrderSmart } from "../services/order/update";
 import { deleteOrder } from "../services/order/delete";
 import { createBooking } from "../services/booking/create";
 import { sendQuoteNotification } from "../utils/notification";
 import AppError from "../errors/AppError";
+import {
+  withPerformanceTracking,
+  PerformanceTimer,
+} from "../utils/performance";
+import { ensureConnection } from "../prisma";
 
 export const getAllOrdersController = async (req: Request, res: Response) => {
   try {
@@ -80,80 +85,67 @@ export const createOrderController = async (req: Request, res: Response) => {
 };
 
 export const updateOrderController = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.query;
-    const orderData = req.body;
+  return withPerformanceTracking(
+    "OrderUpdate",
+    async (timer: PerformanceTimer) => {
+      try {
+        const { id } = req.query;
+        const orderData = req.body;
 
-    // Check if a quote is being added or updated
-    const existingOrder = await getOrderById(id as string);
+        timer.checkpoint("Request parsed");
 
-    if (!existingOrder) {
-      throw new AppError("Order not found", 404);
+        // Skip connection verification for speed - let the query handle connection
+        // The singleton client should already be connected
+
+        // Get existing order data in parallel with building update data
+        const [existingOrder] = await Promise.all([
+          getOrderForQuoteCheck(id as string),
+          Promise.resolve(), // Placeholder for potential validation
+        ]);
+
+        timer.checkpoint("Existing order fetched");
+
+        if (!existingOrder) {
+          throw new AppError("Order not found", 404);
+        }
+
+        // Quick quote update check
+        const isQuoteUpdated =
+          orderData.quote &&
+          existingOrder.quote?.toString() !== orderData.quote.toString();
+
+        timer.checkpoint("Quote check completed");
+
+        // Direct update with full data (no conditional logic overhead)
+        const order = await updateOrderSmart(id as string, orderData, true);
+
+        timer.checkpoint("Database update completed");
+
+        // Fire-and-forget notification (completely async)
+        if (isQuoteUpdated && existingOrder.clientId) {
+          setImmediate(() => {
+            const companyName = order.company?.name || "the company";
+            const message = `A quote of ${order.quote} has been provided by ${companyName} for your order.`;
+            sendQuoteNotification(
+              existingOrder.clientId,
+              id as string,
+              message
+            ).catch((error) => console.error("Notification failed:", error));
+          });
+        }
+
+        timer.checkpoint("Response prepared");
+
+        return controllerReturn(order, req, res);
+      } catch (error: any) {
+        // Simplified error handling
+        if (error.code === "P2025") {
+          throw new AppError("Order not found", 404);
+        }
+        throw new AppError(error.message || "Failed to update order", 500);
+      }
     }
-
-    // Check if the quote is being added or updated
-    const isQuoteUpdated =
-      orderData.quote &&
-      (existingOrder.quote === null ||
-        existingOrder.quote === undefined ||
-        existingOrder.quote.toString() !== orderData.quote.toString());
-
-    const order = await updateOrder(id as string, orderData);
-
-    // Send notification if a quote was added or updated
-    if (isQuoteUpdated && order.clientId) {
-      const companyName = order.company ? order.company.name : "the company";
-      const message = `A quote of ${order.quote} has been provided by ${companyName} for your order.`;
-      await sendQuoteNotification(order.clientId, id as string, message);
-    }
-
-    // Create booking if order status is approved
-    // if (
-    //   orderData.status === "APPROVED" &&
-    //   existingOrder.status !== "APPROVED"
-    // ) {
-    //   if (!order.companyId || !order.quote) {
-    //     throw new AppError(
-    //       "Cannot create booking: Company and quote are required for approved orders",
-    //       400
-    //     );
-    //   }
-
-    //   const bookingData = {
-    //     client: { connect: { id: order.clientId } },
-    //     services: {
-    //       connect: order.services.map((service: any) => ({ id: service.id })),
-    //     },
-    //     areas: {
-    //       connect: order.areas.map((area: any) => ({ id: area.id })),
-    //     },
-    //     issueDescription: order.issueDescription,
-    //     attachments: order.attachments,
-    //     address: order.address,
-    //     schedule: order.schedule,
-    //     contactNumber: order.contactNumber,
-    //     company: { connect: { id: order.companyId } },
-    //     bookingPrice: order.quote,
-    //     status: BookingStatus.UPCOMING,
-    //   };
-
-    //   const booking = await createBooking(bookingData);
-
-    //   return controllerReturn(
-    //     {
-    //       order,
-    //       booking,
-    //       message: "Order approved and booking created successfully",
-    //     },
-    //     req,
-    //     res
-    //   );
-    // }
-
-    return controllerReturn(order, req, res);
-  } catch (error: any) {
-    throw new AppError(error.message || "Failed to update order", 500);
-  }
+  );
 };
 
 export const deleteOrderController = async (req: Request, res: Response) => {

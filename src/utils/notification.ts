@@ -76,6 +76,7 @@ export const sendQuoteNotification = async (
   message: string
 ) => {
   try {
+    // Create notification with minimal database interaction
     const notification = await createNotification({
       message,
       type: NotificationType.QUOTE,
@@ -84,13 +85,20 @@ export const sendQuoteNotification = async (
       route: { orderId },
     });
 
-    // Send push notification if possible
-    await sendPushToUser(userId, "New Quote", message, { orderId });
+    // Send push notification in complete background - don't wait
+    process.nextTick(() => {
+      sendPushToUser(userId, "New Quote", message, { orderId }).catch(
+        (error) => {
+          console.error("Push notification failed:", error);
+        }
+      );
+    });
 
     return notification;
   } catch (error) {
     console.error("Failed to send quote notification:", error);
-    throw error;
+    // Return null instead of throwing to prevent blocking
+    return null;
   }
 };
 
@@ -166,8 +174,8 @@ export const sendBulkNotification = async (
           type === NotificationType.REMINDER
             ? "Saynly Reminder"
             : type === NotificationType.QUOTE
-            ? "New Quote"
-            : "Saynly";
+              ? "New Quote"
+              : "Saynly";
 
         const pushResults = await sendPushToUsers(
           userIds,

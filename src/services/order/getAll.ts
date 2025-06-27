@@ -1,6 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { PrismaClient, OrderStatus } from "@prisma/client";
+import prisma from "../../prisma";
 
 interface PaginationParams {
   skip?: number;
@@ -16,7 +15,12 @@ export const getAllOrders = async (
       id: clientId,
     },
     status: {
-      in: ["WAITING_QUOTE", "WAITING_APPROVAL", "CANCELLED", "REJECTED"],
+      in: [
+        OrderStatus.WAITING_QUOTE,
+        OrderStatus.WAITING_APPROVAL,
+        OrderStatus.CANCELLED,
+        OrderStatus.REJECTED,
+      ],
     },
   };
 
