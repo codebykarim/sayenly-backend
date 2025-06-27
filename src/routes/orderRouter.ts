@@ -266,11 +266,12 @@ const orderMethods: { [key: string]: MethodInfo } = {
       address: joi.string().required(),
       schedule: joi.date().required(),
       contactNumber: joi.string().required(),
-      companyId: joi.string().guid().required(),
+      companyId: joi.string().guid().optional(),
       quote: joi.number().optional(),
+      type: joi.string().valid("NEW", "EXISTING").optional().default("NEW"),
       status: joi
         .string()
-        .valid("WAITING_QUOTE", "WAITING_APPROVAL", "REJECTED", "CANCELLED")
+        .valid("WAITING_QUOTE")
         .optional()
         .default("WAITING_QUOTE"),
       boq: joi.object().optional(),
@@ -399,7 +400,13 @@ const orderMethods: { [key: string]: MethodInfo } = {
       quote: joi.number().optional(),
       status: joi
         .string()
-        .valid("WAITING_QUOTE", "WAITING_APPROVAL", "REJECTED", "CANCELLED")
+        .valid(
+          "WAITING_QUOTE",
+          "WAITING_APPROVAL",
+          "REJECTED",
+          "CANCELLED",
+          "APPROVED"
+        )
         .optional(),
       boq: joi.object().optional(),
       services: joi

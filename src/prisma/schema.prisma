@@ -195,6 +195,7 @@ enum OrderStatus {
   WAITING_APPROVAL
   REJECTED
   CANCELLED
+  APPROVED
 }
 
 enum OrderType {
@@ -213,11 +214,11 @@ model Orders {
   address          String
   schedule         DateTime
   contactNumber    String
-  companyId        String
-  company          Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId        String?
+  company          Company?    @relation(fields: [companyId], references: [id], onDelete: Cascade)
   quote            Float?
   status           OrderStatus @default(WAITING_QUOTE)
-  boq              Json?
+  boq              Json? // boq is the bill of quantities
   type             OrderType   @default(NEW)
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
