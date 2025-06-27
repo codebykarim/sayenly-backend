@@ -13,7 +13,10 @@ import { auth } from "./auth";
 import { processUpcomingBookingReminders } from "./utils/scheduler";
 import * as schedule from "node-schedule";
 import swaggerSpec from "./utils/swagger";
-import { apiReference } from "@scalar/express-api-reference";
+const { apiReference } =
+  process.env.NODE_ENV === "development"
+    ? require("@scalar/express-api-reference")
+    : {};
 
 config();
 
