@@ -9,7 +9,36 @@ import AppError from "../errors/AppError";
 
 export const getAllBookingsController = async (req: Request, res: Response) => {
   try {
-    const bookings = await getAllBookings();
+    const id = req.user?.id;
+    if (!id) {
+      throw new AppError("User not found", 404);
+    }
+
+    // Extract pagination parameters from query string
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+
+    // Calculate skip value for Prisma
+    const skip = (page - 1) * limit;
+    const bookings = await getAllBookings(id, { skip, take: limit });
+    return controllerReturn(bookings, req, res);
+  } catch (error: any) {
+    throw new AppError(error.message || "Failed to get bookings", 500);
+  }
+};
+
+export const getAllBookingsDashboardController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    // Extract pagination parameters from query string
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+
+    // Calculate skip value for Prisma
+    const skip = (page - 1) * limit;
+    const bookings = await getAllBookings(null, { skip, take: limit });
     return controllerReturn(bookings, req, res);
   } catch (error: any) {
     throw new AppError(error.message || "Failed to get bookings", 500);
@@ -52,9 +81,9 @@ export const createBookingController = async (req: Request, res: Response) => {
 
 export const updateBookingController = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const { id } = req.query;
     const bookingData = req.body;
-    const booking = await updateBooking(id, bookingData);
+    const booking = await updateBooking(id as string, bookingData);
     return controllerReturn(booking, req, res);
   } catch (error: any) {
     throw new AppError(error.message || "Failed to update booking", 500);
@@ -63,8 +92,8 @@ export const updateBookingController = async (req: Request, res: Response) => {
 
 export const deleteBookingController = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    const booking = await deleteBooking(id);
+    const { id } = req.query;
+    const booking = await deleteBooking(id as string);
     return controllerReturn(
       { message: "Booking deleted successfully" },
       req,

@@ -138,12 +138,63 @@ export const updateOrderController = async (req: Request, res: Response) => {
           orderData.quote &&
           existingOrder.quote?.toString() !== orderData.quote.toString();
 
-        timer.checkpoint("Quote check completed");
+        // Check if status is changing to WAITING_APPROVAL
+        const isStatusChangingToWaitingApproval =
+          orderData.status !== "WAITING_APPROVAL" &&
+          existingOrder.status === "WAITING_APPROVAL";
+
+        timer.checkpoint("Quote and status checks completed");
 
         // Direct update with full data (no conditional logic overhead)
         const order = await updateOrderSmart(id as string, orderData, true);
 
         timer.checkpoint("Database update completed");
+
+        let createdBooking = null;
+
+        // Create booking if status changed to WAITING_APPROVAL
+        if (isStatusChangingToWaitingApproval) {
+          try {
+            console.log(order.companyId, order.contactNumber);
+            // Check that required fields are present for booking creation
+            if (!order.companyId) {
+              throw new Error(
+                "Cannot create booking: order has no assigned company"
+              );
+            }
+
+            // Transform order data to booking data
+            const bookingData = {
+              client: { connect: { id: order.clientId } },
+              services: {
+                connect: order.services.map((service: any) => ({
+                  id: service.id,
+                })),
+              },
+              areas: {
+                connect: order.areas.map((area: any) => ({ id: area.id })),
+              },
+              issueDescription: order.issueDescription,
+              attachments: order.attachments || [],
+              address: order.address,
+              schedule: order.schedule,
+              contactNumber: order.contactNumber,
+              company: { connect: { id: order.companyId } },
+              bookingPrice: order.quote || 0,
+              status: BookingStatus.UPCOMING,
+              notes: {
+                boq: order.boq,
+              },
+            };
+
+            createdBooking = await createBooking(bookingData);
+            timer.checkpoint("Booking created");
+          } catch (bookingError: any) {
+            console.error("Failed to create booking:", bookingError);
+            // Don't throw here - the order update was successful
+            // Log the error but continue with the response
+          }
+        }
 
         // Fire-and-forget notification (completely async)
         if (isQuoteUpdated && existingOrder.clientId) {
@@ -160,7 +211,16 @@ export const updateOrderController = async (req: Request, res: Response) => {
 
         timer.checkpoint("Response prepared");
 
-        return controllerReturn(order, req, res);
+        // Include booking creation status in response
+        const response = {
+          ...order,
+          ...(createdBooking && {
+            bookingCreated: true,
+            booking: createdBooking,
+          }),
+        };
+
+        return controllerReturn(response, req, res);
       } catch (error: any) {
         // Simplified error handling
         if (error.code === "P2025") {

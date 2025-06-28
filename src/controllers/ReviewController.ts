@@ -6,6 +6,7 @@ import { createReview } from "../services/review/create";
 import { updateReview } from "../services/review/update";
 import { deleteReview } from "../services/review/delete";
 import AppError from "../errors/AppError";
+import { updateBooking } from "../services/booking/update";
 
 export const getAllReviewsController = async (req: Request, res: Response) => {
   try {
@@ -36,9 +37,17 @@ export const getReviewByIdController = async (req: Request, res: Response) => {
 
 export const createReviewController = async (req: Request, res: Response) => {
   try {
+    const { bookingId } = req.body;
     const reviewData = req.body;
 
     const review = await createReview(reviewData);
+    // Add review to booking
+
+    if (bookingId) {
+      await updateBooking(bookingId, {
+        clientReview: { connect: { id: review.id } },
+      });
+    }
     return controllerReturn(review, req, res);
   } catch (error: any) {
     throw new AppError(error.message || "Failed to create review", 500);

@@ -172,6 +172,7 @@ const reviewMethods: { [key: string]: MethodInfo } = {
       rating: joi.number().min(1).max(5).required(),
       review: joi.string().required(),
       clientId: joi.string().optional(),
+      bookingId: joi.string().optional(),
     },
   },
   /**

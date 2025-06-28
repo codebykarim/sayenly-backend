@@ -135,6 +135,11 @@ const bookingMethods: { [key: string]: MethodInfo } = {
     controllerFunction: BookingController.getAllBookingsController,
     authFunction: isAuth,
   },
+  "get-all-dashboard": {
+    httpMethod: "GET",
+    controllerFunction: BookingController.getAllBookingsDashboardController,
+    authFunction: isAuth,
+  },
   /**
    * @swagger
    * /booking/get-by-id:
