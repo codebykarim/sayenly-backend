@@ -21,12 +21,21 @@ const { apiReference } =
 config();
 
 const app: Application = express();
+
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "https://dashboard.sayenly.com"], // Remove any undefined values
+    optionsSuccessStatus: 200,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
 app.all("/api/auth/*", toNodeHandler(auth));
 
 // Serve static files
 app.use(express.static(path.join(__dirname, "public")));
-
-app.use(cors());
 
 app.use(pkg.urlencoded({ extended: true }));
 app.use(pkg.json());

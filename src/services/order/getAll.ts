@@ -7,19 +7,24 @@ interface PaginationParams {
 }
 
 export const getAllOrders = async (
-  clientId: string,
-  pagination?: PaginationParams
+  clientId: string | null,
+  pagination?: PaginationParams,
+  isDashboard?: boolean
 ) => {
   const where = {
-    client: {
-      id: clientId,
-    },
+    ...(clientId &&
+      !isDashboard && {
+        client: {
+          id: clientId,
+        },
+      }),
     status: {
       in: [
         OrderStatus.WAITING_QUOTE,
         OrderStatus.WAITING_APPROVAL,
         OrderStatus.CANCELLED,
         OrderStatus.REJECTED,
+        ...(isDashboard ? [OrderStatus.APPROVED] : []),
       ],
     },
   };

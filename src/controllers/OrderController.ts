@@ -36,6 +36,30 @@ export const getAllOrdersController = async (req: Request, res: Response) => {
   }
 };
 
+export const getAllOrdersDashboardController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const id = req.user?.id;
+    if (!id) {
+      throw new AppError("User not found", 404);
+    }
+
+    // Extract pagination parameters from query string
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+
+    // Calculate skip value for Prisma
+    const skip = (page - 1) * limit;
+
+    const result = await getAllOrders(null, { skip, take: limit }, true);
+    return controllerReturn(result, req, res);
+  } catch (error: any) {
+    throw new AppError(error.message || "Failed to get orders", 500);
+  }
+};
+
 export const getOrderByIdController = async (req: Request, res: Response) => {
   try {
     const { id } = req.query;
@@ -150,8 +174,8 @@ export const updateOrderController = async (req: Request, res: Response) => {
 
 export const deleteOrderController = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    const order = await deleteOrder(id);
+    const { id } = req.query;
+    const order = await deleteOrder(id as string);
     return controllerReturn(
       { message: "Order deleted successfully" },
       req,

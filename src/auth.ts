@@ -13,6 +13,9 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
+  emailAndPassword: {
+    enabled: true,
+  },
   plugins: [
     openAPI(),
     bearer(),
@@ -89,4 +92,5 @@ export const auth = betterAuth({
       },
     },
   },
+  trustedOrigins: ["http://localhost:3000", "https://dashboard.sayenly.com"],
 });

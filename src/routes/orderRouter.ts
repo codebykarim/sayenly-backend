@@ -127,6 +127,11 @@ const orderMethods: { [key: string]: MethodInfo } = {
     controllerFunction: OrderController.getAllOrdersController,
     authFunction: isAuth,
   },
+  "get-all-dashboard": {
+    httpMethod: "GET",
+    controllerFunction: OrderController.getAllOrdersDashboardController,
+    authFunction: isAuth,
+  },
   /**
    * @swagger
    * /order/get-by-id:
