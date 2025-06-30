@@ -11,7 +11,6 @@ export const updateProject = async (
     data: projectData,
     include: {
       services: true,
-      areas: true,
     },
   });
 };

@@ -6,7 +6,6 @@ export const getAllProjects = async () => {
   return await prisma.projects.findMany({
     include: {
       services: true,
-      areas: true,
     },
   });
 };

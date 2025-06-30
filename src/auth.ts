@@ -90,6 +90,9 @@ export const auth = betterAuth({
         type: "string",
         options: ["EMIRATI", "OTHER"],
       },
+      fcmToken: {
+        type: "string",
+      },
     },
   },
   trustedOrigins: ["http://localhost:3000", "https://dashboard.sayenly.com"],

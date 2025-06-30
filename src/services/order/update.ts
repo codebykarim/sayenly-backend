@@ -43,14 +43,6 @@ export const updateOrderFullOptimized = async (
             inApp: true,
           },
         },
-        areas: {
-          select: {
-            id: true,
-            name: true,
-            nameAr: true,
-            inApp: true,
-          },
-        },
       },
     });
     console.timeEnd("🔍 UPDATE_QUERY");
@@ -153,14 +145,6 @@ export const updateOrderWithTransaction = async (
               },
             },
             services: {
-              select: {
-                id: true,
-                name: true,
-                nameAr: true,
-                inApp: true,
-              },
-            },
-            areas: {
               select: {
                 id: true,
                 name: true,

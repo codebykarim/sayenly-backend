@@ -171,9 +171,7 @@ export const updateOrderController = async (req: Request, res: Response) => {
                   id: service.id,
                 })),
               },
-              areas: {
-                connect: order.areas.map((area: any) => ({ id: area.id })),
-              },
+              areas: order.areas as any,
               issueDescription: order.issueDescription,
               attachments: order.attachments || [],
               address: order.address,

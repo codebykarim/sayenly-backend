@@ -8,7 +8,6 @@ export const getBookingById = async (id: string) => {
     include: {
       client: true,
       services: true,
-      areas: true,
       company: true,
       clientReview: true,
     },

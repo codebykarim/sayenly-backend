@@ -9,7 +9,6 @@ export const createProject = async (
     data: projectData,
     include: {
       services: true,
-      areas: true,
     },
   });
 };

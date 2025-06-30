@@ -288,14 +288,7 @@ const orderMethods: { [key: string]: MethodInfo } = {
           })
         )
         .required(),
-      areas: joi
-        .array()
-        .items(
-          joi.object({
-            id: joi.string().guid().required(),
-          })
-        )
-        .required(),
+      areas: joi.array().items(joi.object()).required(),
     },
   },
   /**
@@ -422,14 +415,7 @@ const orderMethods: { [key: string]: MethodInfo } = {
           })
         )
         .optional(),
-      areas: joi
-        .array()
-        .items(
-          joi.object({
-            id: joi.string().guid().required(),
-          })
-        )
-        .optional(),
+      areas: joi.array().items(joi.object()).optional(),
     },
   },
   /**

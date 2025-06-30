@@ -8,7 +8,6 @@ export const createOrder = async (orderData: Prisma.OrdersCreateInput) => {
     include: {
       client: true,
       services: true,
-      areas: true,
       company: true,
     },
   });

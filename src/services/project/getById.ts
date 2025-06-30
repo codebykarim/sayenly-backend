@@ -7,7 +7,6 @@ export const getProjectById = async (id: string) => {
     where: { id },
     include: {
       services: true,
-      areas: true,
     },
   });
 };

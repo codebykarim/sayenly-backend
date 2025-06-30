@@ -10,7 +10,6 @@ export const createBooking = async (
     include: {
       client: true,
       services: true,
-      areas: true,
       company: true,
       clientReview: true,
     },

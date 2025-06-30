@@ -236,14 +236,6 @@ const projectMethods: { [key: string]: MethodInfo } = {
           })
         )
         .optional(),
-      areas: joi
-        .array()
-        .items(
-          joi.object({
-            id: joi.string().guid().required(),
-          })
-        )
-        .optional(),
     },
   },
   /**
@@ -337,14 +329,6 @@ const projectMethods: { [key: string]: MethodInfo } = {
       inApp: joi.boolean().optional(),
       htmlContent: joi.object().optional(),
       services: joi
-        .array()
-        .items(
-          joi.object({
-            id: joi.string().guid().required(),
-          })
-        )
-        .optional(),
-      areas: joi
         .array()
         .items(
           joi.object({

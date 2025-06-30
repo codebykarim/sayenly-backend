@@ -20,7 +20,6 @@ export const getAllBookings = async (
   const include = {
     client: true,
     services: true,
-    areas: true,
     company: true,
   };
 

@@ -25,13 +25,6 @@ export const getOrderById = async (id: string) => {
           nameAr: true,
         },
       },
-      areas: {
-        select: {
-          id: true,
-          name: true,
-          nameAr: true,
-        },
-      },
     },
   });
 };

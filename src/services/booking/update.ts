@@ -12,7 +12,6 @@ export const updateBooking = async (
     include: {
       client: true,
       services: true,
-      areas: true,
       company: true,
       clientReview: true,
     },

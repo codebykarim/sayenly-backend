@@ -24,6 +24,7 @@ model User {
   updatedAt           DateTime
   settings            Json?
   role                String?
+  fcmToken            String?
   banned              Boolean?
   banReason           String?
   banExpires          Int?
@@ -98,7 +99,6 @@ model Projects {
   inApp       Boolean    @default(false)
   htmlContent Json
   services    Services[]
-  areas       Areas[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 }
@@ -118,19 +118,6 @@ model Services {
   orders           Orders[]
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
-}
-
-model Areas {
-  id        String     @id @unique @default(uuid())
-  name      String
-  nameAr    String?
-  areaImage String?
-  inApp     Boolean    @default(false)
-  Projects  Projects[]
-  Bookings  Bookings[]
-  Orders    Orders[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
 }
 
 model Faq {
@@ -172,7 +159,7 @@ model Bookings {
   clientId           String
   client             User          @relation(fields: [clientId], references: [id], onDelete: Cascade)
   services           Services[]
-  areas              Areas[]
+  areas              Json?
   issueDescription   String
   attachments        String[]
   address            String
@@ -208,7 +195,7 @@ model Orders {
   clientId         String
   client           User        @relation(fields: [clientId], references: [id], onDelete: Cascade)
   services         Services[]
-  areas            Areas[]
+  areas            Json?
   issueDescription String
   attachments      String[]
   address          String
@@ -244,6 +231,7 @@ model Notifications {
   userId    String
   user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   message   String
+  messageAr String?
   read      Boolean          @default(false)
   type      NotificationType
   route     Json?
