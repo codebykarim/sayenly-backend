@@ -6,7 +6,7 @@ import { sendSMS } from "./utils/sendSMS";
 
 // Fixed OTP for test users
 const TEST_USERS: Record<string, string> = {
-  "+201021656119": "324894",
+  "+971501234568": "324894",
 };
 
 export const auth = betterAuth({

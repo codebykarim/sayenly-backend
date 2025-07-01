@@ -94,13 +94,6 @@ export const createOrderController = async (req: Request, res: Response) => {
       };
     }
 
-    // Transform areas array to Prisma connect format
-    if (orderData.areas && Array.isArray(orderData.areas)) {
-      orderData.areas = {
-        connect: orderData.areas.map((area: any) => ({ id: area.id })),
-      };
-    }
-
     const order = await createOrder(orderData);
     return controllerReturn(order, req, res);
   } catch (error: any) {
