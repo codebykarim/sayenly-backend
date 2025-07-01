@@ -133,7 +133,7 @@ export const updateOrderController = async (req: Request, res: Response) => {
 
         // Check if status is changing to WAITING_APPROVAL
         const isStatusChangingToWaitingApproval =
-          orderData.status !== "WAITING_APPROVAL" &&
+          orderData.status === "APPROVED" &&
           existingOrder.status === "WAITING_APPROVAL";
 
         timer.checkpoint("Quote and status checks completed");
