@@ -76,8 +76,7 @@
     "twilio": "^5.4.5"
   },
   "prisma": {
-    "schema": "src/prisma/schema.prisma",
-    "seed": "pnpm tsx src/prisma/seed.ts"
+    "schema": "src/prisma/schema.prisma"
   },
   "packageManager": "pnpm@9.1.1"
 }

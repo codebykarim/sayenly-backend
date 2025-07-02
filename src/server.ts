@@ -68,6 +68,17 @@ app.get("/api/docs.json", (req: Request, res: Response) => {
 
 app.use("/api", routes);
 
+app.use("/api/send-bookings-reminders", async (req: Request, res: Response) => {
+  try {
+    const count = await processUpcomingBookingReminders();
+    res.status(200).json({
+      message: `Sent ${count} booking reminders`,
+    });
+  } catch (error) {
+    throw new AppError("Failed to send reminders ");
+  }
+});
+
 // Custom error interface that might include meta information
 interface ExtendedError extends Error {
   meta?: Record<string, any>;
@@ -90,22 +101,6 @@ app.use(async (err: Error, req: Request, res: Response, _: NextFunction) => {
 app.all("*", async (req: Request, res: Response) => {
   res.status(200).json({ status: "ok" });
 });
-
-// Schedule daily booking reminders at 9:00 AM
-try {
-  schedule.scheduleJob("0 9 * * *", async () => {
-    console.log("Running scheduled task: Processing booking reminders");
-    try {
-      const count = await processUpcomingBookingReminders();
-      console.log(`Sent ${count} booking reminders`);
-    } catch (error) {
-      console.error("Failed to process booking reminders:", error);
-    }
-  });
-  console.log("Scheduled task added: Daily booking reminders at 9:00 AM");
-} catch (error) {
-  console.error("Failed to schedule booking reminders task:", error);
-}
 
 const port = process.env.PORT ?? 3000;
 app.listen(port, () => {

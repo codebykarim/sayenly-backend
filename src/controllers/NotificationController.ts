@@ -5,12 +5,10 @@ import { getNotificationById } from "../services/notification/getById";
 import { createNotification } from "../services/notification/create";
 import { updateNotification } from "../services/notification/update";
 import { deleteNotification } from "../services/notification/delete";
-import {
-  sendSystemNotification,
-  sendBulkNotification,
-} from "../utils/notification";
+import { sendSystemNotification } from "../utils/notification";
 import AppError from "../errors/AppError";
 import { NotificationType } from "@prisma/client";
+import { updateAllNotifications } from "../services/notification/readAll";
 
 export const getAllNotificationsController = async (
   req: Request,
@@ -69,15 +67,47 @@ export const updateNotificationController = async (
   res: Response
 ) => {
   try {
-    const { id } = req.params;
+    const { id } = req.query;
     const notificationData = req.body;
-    const notification = await updateNotification(id, notificationData);
+    const notification = await updateNotification(
+      id as string,
+      notificationData
+    );
     return controllerReturn(notification, req, res);
   } catch (error: any) {
     throw new AppError(error.message || "Failed to update notification", 500);
   }
 };
 
+export const readOneNotificationController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { id } = req.query;
+    const notification = await updateNotification(id as string, {
+      read: true,
+    });
+    return controllerReturn(notification, req, res);
+  } catch (error: any) {
+    throw new AppError(error.message || "Failed to read notification", 500);
+  }
+};
+
+export const readAllNotificationsController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const notifications = await updateAllNotifications({ read: true });
+    return controllerReturn(notifications, req, res);
+  } catch (error: any) {
+    throw new AppError(
+      error.message || "Failed to read all notifications",
+      500
+    );
+  }
+};
 export const deleteNotificationController = async (
   req: Request,
   res: Response
@@ -101,7 +131,7 @@ export const sendSystemNotificationController = async (
   res: Response
 ) => {
   try {
-    const { userId, message, route } = req.body;
+    const { userId, message, messageAr, route } = req.body;
 
     if (!userId) {
       throw new AppError("User ID is required", 400);
@@ -111,61 +141,16 @@ export const sendSystemNotificationController = async (
       throw new AppError("Message is required", 400);
     }
 
-    const notification = await sendSystemNotification(userId, message, route);
+    const notification = await sendSystemNotification(
+      userId,
+      message,
+      messageAr,
+      route
+    );
     return controllerReturn(notification, req, res);
   } catch (error: any) {
     throw new AppError(
       error.message || "Failed to send system notification",
-      500
-    );
-  }
-};
-
-/**
- * Send a notification to multiple users or all users
- */
-export const sendBulkNotificationController = async (
-  req: Request,
-  res: Response
-) => {
-  try {
-    const { message, type, userIds, route } = req.body;
-
-    if (!message) {
-      throw new AppError("Message is required", 400);
-    }
-
-    // Validate notification type
-    let notificationType: NotificationType;
-    if (
-      type &&
-      (type === "SAYENLY" || type === "REMINDER" || type === "QUOTE")
-    ) {
-      notificationType = type as NotificationType;
-    } else {
-      notificationType = NotificationType.SAYENLY;
-    }
-
-    // Send the bulk notification
-    const results = await sendBulkNotification(
-      message,
-      notificationType,
-      userIds,
-      route
-    );
-
-    return controllerReturn(
-      {
-        success: true,
-        message: `Successfully sent ${results.dbNotifications} database notifications and ${results.pushNotifications} push notifications`,
-        results,
-      },
-      req,
-      res
-    );
-  } catch (error: any) {
-    throw new AppError(
-      error.message || "Failed to send bulk notifications",
       500
     );
   }

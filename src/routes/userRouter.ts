@@ -143,7 +143,7 @@ const userRouter = Router();
  *         description: Server error
  *
  * @swagger
- * /api/auth/update-user:
+ * /auth/update-user:
  *   post:
  *     summary: Update the current user's profile
  *     tags: [Authentication]

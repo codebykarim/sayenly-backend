@@ -1,6 +1,6 @@
 import { PrismaClient, NotificationType } from "@prisma/client";
 import { createNotification } from "../services/notification/create";
-import { sendPushToDevice, sendPushToUser, sendPushToUsers } from "./fcm";
+import { sendPushToUser } from "./fcm";
 
 const prisma = new PrismaClient();
 
@@ -13,11 +13,13 @@ const prisma = new PrismaClient();
 export const sendSystemNotification = async (
   userId: string,
   message: string,
+  messageAr: string,
   route?: any
 ) => {
   try {
     const notification = await createNotification({
       message,
+      messageAr,
       type: NotificationType.SAYENLY,
       read: false,
       user: { connect: { id: userId } },
@@ -25,7 +27,14 @@ export const sendSystemNotification = async (
     });
 
     // Send push notification if possible
-    await sendPushToUser(userId, "Saynly", message, route ? route : undefined);
+    await sendPushToUser(
+      userId,
+      "SYANA",
+      "صيانة",
+      message,
+      messageAr,
+      route ? route : undefined
+    );
 
     return notification;
   } catch (error) {
@@ -42,20 +51,30 @@ export const sendSystemNotification = async (
  */
 export const sendBookingReminder = async (
   userId: string,
-  bookingId: string,
-  message: string
+  message: string,
+  messageAr: string
 ) => {
   try {
     const notification = await createNotification({
       message,
+      messageAr,
       type: NotificationType.REMINDER,
       read: false,
       user: { connect: { id: userId } },
-      route: { bookingId },
+      route: { path: "bookings" },
     });
 
     // Send push notification if possible
-    await sendPushToUser(userId, "Saynly Reminder", message, { bookingId });
+    await sendPushToUser(
+      userId,
+      "SYANA Reminder",
+      "تذكير من صيانة",
+      message,
+      messageAr,
+      {
+        path: "bookings",
+      }
+    );
 
     return notification;
   } catch (error) {
@@ -72,26 +91,27 @@ export const sendBookingReminder = async (
  */
 export const sendQuoteNotification = async (
   userId: string,
-  orderId: string,
-  message: string
+  message: string,
+  messageAr: string
 ) => {
   try {
     // Create notification with minimal database interaction
     const notification = await createNotification({
       message,
+      messageAr,
       type: NotificationType.QUOTE,
       read: false,
       user: { connect: { id: userId } },
-      route: { orderId },
+      route: { path: "orders" },
     });
 
     // Send push notification in complete background - don't wait
     process.nextTick(() => {
-      sendPushToUser(userId, "New Quote", message, { orderId }).catch(
-        (error) => {
-          console.error("Push notification failed:", error);
-        }
-      );
+      sendPushToUser(userId, "New Quote", "تسعيرة جديدة", message, messageAr, {
+        path: "orders",
+      }).catch((error) => {
+        console.error("Push notification failed:", error);
+      });
     });
 
     return notification;
@@ -102,102 +122,102 @@ export const sendQuoteNotification = async (
   }
 };
 
-/**
- * Send a bulk notification to multiple users or all users
- * @param message The message to send to all users
- * @param type The notification type
- * @param userIds Optional array of user IDs to send to (if not provided, sends to all users)
- * @param route Optional route information to include in the notification
- */
-export const sendBulkNotification = async (
-  message: string,
-  type: NotificationType = NotificationType.SAYENLY,
-  userIds?: string[],
-  route?: any
-) => {
-  try {
-    let users;
+// /**
+//  * Send a bulk notification to multiple users or all users
+//  * @param message The message to send to all users
+//  * @param type The notification type
+//  * @param userIds Optional array of user IDs to send to (if not provided, sends to all users)
+//  * @param route Optional route information to include in the notification
+//  */
+// export const sendBulkNotification = async (
+//   message: string,
+//   type: NotificationType = NotificationType.SAYENLY,
+//   userIds?: string[],
+//   route?: any
+// ) => {
+//   try {
+//     let users;
 
-    if (userIds && userIds.length > 0) {
-      // Get specific users
-      users = await prisma.user.findMany({
-        where: {
-          id: {
-            in: userIds,
-          },
-        },
-        select: {
-          id: true,
-        },
-      });
-    } else {
-      // Get all users
-      users = await prisma.user.findMany({
-        select: {
-          id: true,
-        },
-      });
-    }
+//     if (userIds && userIds.length > 0) {
+//       // Get specific users
+//       users = await prisma.user.findMany({
+//         where: {
+//           id: {
+//             in: userIds,
+//           },
+//         },
+//         select: {
+//           id: true,
+//         },
+//       });
+//     } else {
+//       // Get all users
+//       users = await prisma.user.findMany({
+//         select: {
+//           id: true,
+//         },
+//       });
+//     }
 
-    const results = {
-      total: users.length,
-      dbNotifications: 0,
-      pushNotifications: 0,
-    };
+//     const results = {
+//       total: users.length,
+//       dbNotifications: 0,
+//       pushNotifications: 0,
+//     };
 
-    // Create notifications in batches
-    const notificationPromises = users.map(async (user) => {
-      try {
-        // Create database notification
-        await createNotification({
-          message,
-          type,
-          read: false,
-          user: { connect: { id: user.id } },
-          ...(route && { route }),
-        });
-        results.dbNotifications++;
-      } catch (error) {
-        console.error(
-          `Failed to create DB notification for user ${user.id}:`,
-          error
-        );
-      }
-    });
+//     // Create notifications in batches
+//     const notificationPromises = users.map(async (user) => {
+//       try {
+//         // Create database notification
+//         await createNotification({
+//           message,
+//           type,
+//           read: false,
+//           user: { connect: { id: user.id } },
+//           ...(route && { route }),
+//         });
+//         results.dbNotifications++;
+//       } catch (error) {
+//         console.error(
+//           `Failed to create DB notification for user ${user.id}:`,
+//           error
+//         );
+//       }
+//     });
 
-    await Promise.all(notificationPromises);
+//     await Promise.all(notificationPromises);
 
-    // Send push notifications to all users
-    if (userIds && userIds.length > 0) {
-      try {
-        const title =
-          type === NotificationType.REMINDER
-            ? "Saynly Reminder"
-            : type === NotificationType.QUOTE
-              ? "New Quote"
-              : "Saynly";
+//     // Send push notifications to all users
+//     if (userIds && userIds.length > 0) {
+//       try {
+//         const title =
+//           type === NotificationType.REMINDER
+//             ? "Saynly Reminder"
+//             : type === NotificationType.QUOTE
+//               ? "New Quote"
+//               : "Saynly";
 
-        const pushResults = await sendPushToUsers(
-          userIds,
-          title,
-          message,
-          route ? route : undefined
-        );
+//         const pushResults = await sendPushToUsers(
+//           userIds,
+//           title,
+//           message,
+//           route ? route : undefined
+//         );
 
-        // Count successful push notifications
-        pushResults.forEach((result) => {
-          if (result.status === "fulfilled") {
-            results.pushNotifications++;
-          }
-        });
-      } catch (error) {
-        console.error("Failed to send push notifications:", error);
-      }
-    }
+//         // Count successful push notifications
+//         pushResults.forEach((result) => {
+//           if (result.status === "fulfilled") {
+//             results.pushNotifications++;
+//           }
+//         });
+//       } catch (error) {
+//         console.error("Failed to send push notifications:", error);
+//       }
+//     }
 
-    return results;
-  } catch (error) {
-    console.error("Failed to send bulk notifications:", error);
-    throw error;
-  }
-};
+//     return results;
+//   } catch (error) {
+//     console.error("Failed to send bulk notifications:", error);
+//     throw error;
+//   }
+// };

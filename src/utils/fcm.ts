@@ -45,7 +45,9 @@ export const sendPushToDevice = async (
 export const sendPushToUser = async (
   userId: string,
   title: string,
+  titleAr: string,
   body: string,
+  bodyAr: string,
   data?: Record<string, string>
 ) => {
   try {
@@ -53,68 +55,47 @@ export const sendPushToUser = async (
     // This is a placeholder - you'll need to adapt this to your actual user schema
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, settings: true },
+      select: { id: true, fcmToken: true, lang: true },
     });
 
     if (!user) {
       throw new Error(`User with ID ${userId} not found`);
     }
 
-    // Check if user has FCM token in settings
-    if (!user.settings || typeof user.settings !== "object") {
-      console.log(`No settings or FCM token found for user ${userId}`);
-      return [];
+    if (!user.fcmToken) {
+      throw new Error(`No FCM Token for ${userId}`);
     }
 
-    const settings = user.settings as Record<string, any>;
+    const isArabic = user.lang === "ar";
 
-    // First check if we have a single fcmToken (legacy)
-    if (settings.fcmToken) {
-      return [await sendPushToDevice(settings.fcmToken, title, body, data)];
-    }
-
-    // If we have an array of tokens, use that
-    const fcmTokens = (settings.fcmTokens as string[]) || [];
-
-    if (fcmTokens.length === 0) {
-      console.log(`No FCM tokens found for user ${userId}`);
-      return [];
-    }
-
-    // Send to all user devices
-    const sendPromises = fcmTokens.map((token) =>
-      sendPushToDevice(token, title, body, data)
+    return await sendPushToDevice(
+      user.fcmToken,
+      isArabic ? titleAr : title,
+      isArabic ? bodyAr : body,
+      data
     );
-
-    const results = await Promise.allSettled(sendPromises);
-
-    console.log(
-      `Sent push notifications to ${results.length} devices for user ${userId}`
-    );
-
-    return results;
   } catch (error) {
     console.error("Error sending push to user:", error);
     throw error;
   }
 };
 
-/**
- * Send a push notification to multiple users
- * @param userIds Array of user IDs to send notifications to
- * @param title Notification title
- * @param body Notification body
- * @param data Additional data to send with the notification
- */
-export const sendPushToUsers = async (
-  userIds: string[],
-  title: string,
-  body: string,
-  data?: Record<string, string>
-) => {
-  const results = await Promise.allSettled(
-    userIds.map((userId) => sendPushToUser(userId, title, body, data))
-  );
+// /**
+//  * Send a push notification to multiple users
+//  * @param userIds Array of user IDs to send notifications to
+//  * @param title Notification title
+//  * @param body Notification body
+//  * @param data Additional data to send with the notification
+//  */
+// export const sendPushToUsers = async (
+//   userIds: string[],
+//   title: string,
+//   body: string,
+//   data?: Record<string, string>
+// ) => {
+//   const results = await Promise.allSettled(
+//     userIds.map((userId) => sendPushToUser(userId, title, body, data))
+//   );
 
-  return results;
-};
+//   return results;
+// };

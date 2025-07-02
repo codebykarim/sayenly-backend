@@ -2,7 +2,6 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import prisma from "./prisma";
 import { admin, bearer, openAPI, phoneNumber } from "better-auth/plugins";
-import { sendSMS } from "./utils/sendSMS";
 
 // Fixed OTP for test users
 const TEST_USERS: Record<string, string> = {
@@ -92,6 +91,11 @@ export const auth = betterAuth({
       },
       fcmToken: {
         type: "string",
+      },
+      lang: {
+        type: "string",
+        required: false,
+        defaultValue: "en",
       },
     },
   },

@@ -9,11 +9,6 @@ import { deleteOrder } from "../services/order/delete";
 import { createBooking } from "../services/booking/create";
 import { sendQuoteNotification } from "../utils/notification";
 import AppError from "../errors/AppError";
-import {
-  withPerformanceTracking,
-  PerformanceTimer,
-} from "../utils/performance";
-import { ensureConnection } from "../prisma";
 
 export const getAllOrdersController = async (req: Request, res: Response) => {
   try {
@@ -102,125 +97,108 @@ export const createOrderController = async (req: Request, res: Response) => {
 };
 
 export const updateOrderController = async (req: Request, res: Response) => {
-  return withPerformanceTracking(
-    "OrderUpdate",
-    async (timer: PerformanceTimer) => {
+  try {
+    const { id } = req.query;
+    const orderData = req.body;
+
+    // Skip connection verification for speed - let the query handle connection
+    // The singleton client should already be connected
+
+    // Get existing order data in parallel with building update data
+    const [existingOrder] = await Promise.all([
+      getOrderForQuoteCheck(id as string),
+      Promise.resolve(), // Placeholder for potential validation
+    ]);
+
+    if (!existingOrder) {
+      throw new AppError("Order not found", 404);
+    }
+
+    const isQuoteAdded =
+      existingOrder.status == "WAITING_QUOTE" &&
+      orderData.status == "WAITING_APPROVAL" &&
+      orderData.quote.toString().length != 0;
+
+    const isQuoteUpdated =
+      existingOrder.status == "WAITING_APPROVAL" &&
+      orderData.status == "WAITING_APPROVAL" &&
+      orderData.quote != existingOrder.quote;
+
+    // Check if status is changing to WAITING_APPROVAL
+    const isStatusChangingToWaitingApproval =
+      orderData.status === "APPROVED" &&
+      existingOrder.status === "WAITING_APPROVAL";
+
+    // Direct update with full data (no conditional logic overhead)
+    const order = await updateOrderSmart(id as string, orderData, true);
+
+    let createdBooking = null;
+
+    // Create booking if status changed to WAITING_APPROVAL
+    if (isStatusChangingToWaitingApproval) {
       try {
-        const { id } = req.query;
-        const orderData = req.body;
-
-        timer.checkpoint("Request parsed");
-
-        // Skip connection verification for speed - let the query handle connection
-        // The singleton client should already be connected
-
-        // Get existing order data in parallel with building update data
-        const [existingOrder] = await Promise.all([
-          getOrderForQuoteCheck(id as string),
-          Promise.resolve(), // Placeholder for potential validation
-        ]);
-
-        timer.checkpoint("Existing order fetched");
-
-        if (!existingOrder) {
-          throw new AppError("Order not found", 404);
+        console.log(order.companyId, order.contactNumber);
+        // Check that required fields are present for booking creation
+        if (!order.companyId) {
+          throw new Error(
+            "Cannot create booking: order has no assigned company"
+          );
         }
 
-        // Quick quote update check
-        const isQuoteUpdated =
-          orderData.quote &&
-          existingOrder.quote?.toString() !== orderData.quote.toString();
-
-        // Check if status is changing to WAITING_APPROVAL
-        const isStatusChangingToWaitingApproval =
-          orderData.status === "APPROVED" &&
-          existingOrder.status === "WAITING_APPROVAL";
-
-        timer.checkpoint("Quote and status checks completed");
-
-        // Direct update with full data (no conditional logic overhead)
-        const order = await updateOrderSmart(id as string, orderData, true);
-
-        timer.checkpoint("Database update completed");
-
-        let createdBooking = null;
-
-        // Create booking if status changed to WAITING_APPROVAL
-        if (isStatusChangingToWaitingApproval) {
-          try {
-            console.log(order.companyId, order.contactNumber);
-            // Check that required fields are present for booking creation
-            if (!order.companyId) {
-              throw new Error(
-                "Cannot create booking: order has no assigned company"
-              );
-            }
-
-            // Transform order data to booking data
-            const bookingData = {
-              client: { connect: { id: order.clientId } },
-              services: {
-                connect: order.services.map((service: any) => ({
-                  id: service.id,
-                })),
-              },
-              areas: order.areas as any,
-              issueDescription: order.issueDescription,
-              attachments: order.attachments || [],
-              address: order.address,
-              schedule: order.schedule,
-              contactNumber: order.contactNumber,
-              company: { connect: { id: order.companyId } },
-              bookingPrice: order.quote || 0,
-              status: BookingStatus.UPCOMING,
-              notes: {
-                boq: order.boq,
-              },
-            };
-
-            createdBooking = await createBooking(bookingData);
-            timer.checkpoint("Booking created");
-          } catch (bookingError: any) {
-            console.error("Failed to create booking:", bookingError);
-            // Don't throw here - the order update was successful
-            // Log the error but continue with the response
-          }
-        }
-
-        // Fire-and-forget notification (completely async)
-        if (isQuoteUpdated && existingOrder.clientId) {
-          setImmediate(() => {
-            const companyName = order.company?.name || "the company";
-            const message = `A quote of ${order.quote} has been provided by ${companyName} for your order.`;
-            sendQuoteNotification(
-              existingOrder.clientId,
-              id as string,
-              message
-            ).catch((error) => console.error("Notification failed:", error));
-          });
-        }
-
-        timer.checkpoint("Response prepared");
-
-        // Include booking creation status in response
-        const response = {
-          ...order,
-          ...(createdBooking && {
-            bookingCreated: true,
-            booking: createdBooking,
-          }),
+        // Transform order data to booking data
+        const bookingData = {
+          client: { connect: { id: order.clientId } },
+          services: {
+            connect: order.services.map((service: any) => ({
+              id: service.id,
+            })),
+          },
+          areas: order.areas as any,
+          issueDescription: order.issueDescription,
+          attachments: order.attachments || [],
+          address: order.address,
+          schedule: order.schedule,
+          contactNumber: order.contactNumber,
+          company: { connect: { id: order.companyId } },
+          bookingPrice: order.quote || 0,
+          status: BookingStatus.UPCOMING,
+          notes: {
+            boq: order.boq,
+          },
         };
 
-        return controllerReturn(response, req, res);
-      } catch (error: any) {
-        // Simplified error handling
-        if (error.code === "P2025") {
-          throw new AppError("Order not found", 404);
-        }
-        throw new AppError(error.message || "Failed to update order", 500);
+        createdBooking = await createBooking(bookingData);
+      } catch (bookingError: any) {
+        console.error("Failed to create booking:", bookingError);
+        // Don't throw here - the order update was successful
+        // Log the error but continue with the response
       }
     }
-  );
+
+    if (isQuoteAdded || isQuoteUpdated) {
+      const message = `A quote of AED ${order.quote} has been provided by Syana for your order.`;
+      const messageAr = `تم تقديم عرض سعر بقيمة ${order.quote} درهم من قبل Syana لطلبك.`;
+
+      await sendQuoteNotification(order.clientId, message, messageAr);
+    }
+
+    // Include booking creation status in response
+    const response = {
+      ...order,
+      ...(createdBooking && {
+        bookingCreated: true,
+        booking: createdBooking,
+      }),
+    };
+
+    return controllerReturn(response, req, res);
+  } catch (error: any) {
+    // Simplified error handling
+    if (error.code === "P2025") {
+      throw new AppError("Order not found", 404);
+    }
+    throw new AppError(error.message || "Failed to update order", 500);
+  }
 };
 
 export const deleteOrderController = async (req: Request, res: Response) => {

@@ -76,13 +76,7 @@
       },
       "Area": {
         "type": "object",
-        "required": [
-          "id",
-          "name",
-          "nameAr",
-          "createdAt",
-          "updatedAt"
-        ],
+        "required": ["id", "name", "nameAr", "createdAt", "updatedAt"],
         "properties": {
           "id": {
             "$ref": "#/components/schemas/UUID"
@@ -336,10 +330,7 @@
                 "items": {
                   "type": "string"
                 },
-                "example": [
-                  "+971501111111",
-                  "+971502222222"
-                ]
+                "example": ["+971501111111", "+971502222222"]
               }
             }
           },
@@ -350,12 +341,7 @@
           },
           "status": {
             "type": "string",
-            "enum": [
-              "UPCOMING",
-              "ONGOING",
-              "COMPLETED",
-              "CANCELLED"
-            ],
+            "enum": ["UPCOMING", "ONGOING", "COMPLETED", "CANCELLED"],
             "description": "Current status of the booking",
             "example": "UPCOMING"
           },
@@ -428,10 +414,7 @@
               "$ref": "#/components/schemas/PhoneNumber"
             },
             "description": "List of business phone numbers",
-            "example": [
-              "+971501111111",
-              "+97142345678"
-            ]
+            "example": ["+971501111111", "+97142345678"]
           },
           "emailAddresses": {
             "type": "array",
@@ -439,10 +422,7 @@
               "$ref": "#/components/schemas/Email"
             },
             "description": "List of business email addresses",
-            "example": [
-              "info@cooltech.ae",
-              "support@cooltech.ae"
-            ]
+            "example": ["info@cooltech.ae", "support@cooltech.ae"]
           },
           "addresses": {
             "type": "array",
@@ -627,11 +607,7 @@
               "type": "string"
             },
             "description": "Tags for better categorization and search",
-            "example": [
-              "booking",
-              "appointment",
-              "mobile app"
-            ]
+            "example": ["booking", "appointment", "mobile app"]
           },
           "helpfulCount": {
             "type": "integer",
@@ -649,9 +625,7 @@
             "items": {
               "$ref": "#/components/schemas/UUID"
             },
-            "example": [
-              "456f7890-a12b-34c5-d678-901234567890"
-            ]
+            "example": ["456f7890-a12b-34c5-d678-901234567890"]
           },
           "createdAt": {
             "$ref": "#/components/schemas/DateTime"
@@ -739,12 +713,7 @@
           },
           "priority": {
             "type": "string",
-            "enum": [
-              "LOW",
-              "NORMAL",
-              "HIGH",
-              "URGENT"
-            ],
+            "enum": ["LOW", "NORMAL", "HIGH", "URGENT"],
             "description": "Priority level of the notification",
             "example": "NORMAL"
           },
@@ -937,13 +906,7 @@
           },
           "status": {
             "type": "string",
-            "enum": [
-              "PENDING",
-              "QUOTED",
-              "ACCEPTED",
-              "REJECTED",
-              "EXPIRED"
-            ],
+            "enum": ["PENDING", "QUOTED", "ACCEPTED", "REJECTED", "EXPIRED"],
             "description": "Current status of the order",
             "example": "PENDING"
           },
@@ -1013,12 +976,7 @@
           },
           "urgencyLevel": {
             "type": "string",
-            "enum": [
-              "LOW",
-              "MEDIUM",
-              "HIGH",
-              "EMERGENCY"
-            ],
+            "enum": ["LOW", "MEDIUM", "HIGH", "EMERGENCY"],
             "description": "Urgency level of the service request",
             "example": "MEDIUM"
           },
@@ -1455,11 +1413,7 @@
               },
               "priceType": {
                 "type": "string",
-                "enum": [
-                  "FIXED",
-                  "HOURLY",
-                  "QUOTE_BASED"
-                ],
+                "enum": ["FIXED", "HOURLY", "QUOTE_BASED"],
                 "description": "How the service is priced",
                 "example": "QUOTE_BASED"
               }
@@ -1566,13 +1520,7 @@
               "type": "string"
             },
             "description": "Service tags for better searchability",
-            "example": [
-              "AC",
-              "cooling",
-              "maintenance",
-              "repair",
-              "HVAC"
-            ]
+            "example": ["AC", "cooling", "maintenance", "repair", "HVAC"]
           },
           "createdAt": {
             "$ref": "#/components/schemas/DateTime"
@@ -1618,10 +1566,7 @@
           },
           "nationality": {
             "type": "string",
-            "enum": [
-              "EMIRATI",
-              "OTHER"
-            ],
+            "enum": ["EMIRATI", "OTHER"],
             "description": "User's nationality classification",
             "example": "EMIRATI"
           },
@@ -1649,11 +1594,7 @@
           },
           "role": {
             "type": "string",
-            "enum": [
-              "CUSTOMER",
-              "COMPANY",
-              "ADMIN"
-            ],
+            "enum": ["CUSTOMER", "COMPANY", "ADMIN"],
             "description": "User's role in the platform",
             "example": "CUSTOMER"
           },
@@ -1681,10 +1622,7 @@
               "type": "string"
             },
             "description": "Firebase device tokens for push notifications",
-            "example": [
-              "device_token_123",
-              "device_token_456"
-            ]
+            "example": ["device_token_123", "device_token_456"]
           },
           "totalBookings": {
             "type": "integer",
@@ -1761,11 +1699,7 @@
       },
       "UserRegistration": {
         "type": "object",
-        "required": [
-          "name",
-          "email",
-          "phoneNumber"
-        ],
+        "required": ["name", "email", "phoneNumber"],
         "properties": {
           "name": {
             "type": "string",
@@ -1782,10 +1716,7 @@
           },
           "nationality": {
             "type": "string",
-            "enum": [
-              "EMIRATI",
-              "OTHER"
-            ],
+            "enum": ["EMIRATI", "OTHER"],
             "description": "User's nationality",
             "example": "EMIRATI"
           },
@@ -1795,10 +1726,7 @@
             "properties": {
               "language": {
                 "type": "string",
-                "enum": [
-                  "en",
-                  "ar"
-                ],
+                "enum": ["en", "ar"],
                 "default": "en"
               },
               "notifications": {
@@ -2011,9 +1939,7 @@
       "get": {
         "summary": "Get all service areas/rooms",
         "description": "Retrieve a list of all available service areas and room types that customers can select when booking services. Areas help categorize where services will be performed.",
-        "tags": [
-          "Area"
-        ],
+        "tags": ["Area"],
         "security": [
           {
             "bearerAuth": []
@@ -2157,9 +2083,7 @@
       "get": {
         "summary": "Get area details by ID",
         "description": "Retrieve detailed information about a specific service area including associated services, projects, and usage statistics.",
-        "tags": [
-          "Area"
-        ],
+        "tags": ["Area"],
         "security": [
           {
             "bearerAuth": []
@@ -2216,9 +2140,7 @@
       "post": {
         "summary": "Create a new service area (Admin only)",
         "description": "Add a new area/room type to the platform that customers can select when booking services. This helps categorize service locations.",
-        "tags": [
-          "Area"
-        ],
+        "tags": ["Area"],
         "security": [
           {
             "bearerAuth": []
@@ -2230,10 +2152,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "name",
-                  "nameAr"
-                ],
+                "required": ["name", "nameAr"],
                 "properties": {
                   "name": {
                     "type": "string",
@@ -2284,9 +2203,7 @@
                     "description": "Services that can be performed in this area",
                     "items": {
                       "type": "object",
-                      "required": [
-                        "id"
-                      ],
+                      "required": ["id"],
                       "properties": {
                         "id": {
                           "$ref": "#/components/schemas/UUID"
@@ -2381,9 +2298,7 @@
       "put": {
         "summary": "Update area information (Admin only)",
         "description": "Update an existing service area's information including name, description, category, and associated services.",
-        "tags": [
-          "Area"
-        ],
+        "tags": ["Area"],
         "security": [
           {
             "bearerAuth": []
@@ -2510,9 +2425,7 @@
       "delete": {
         "summary": "Delete a service area (Admin only)",
         "description": "Permanently remove a service area from the platform. This action cannot be undone and will affect all associated bookings and projects.",
-        "tags": [
-          "Area"
-        ],
+        "tags": ["Area"],
         "security": [
           {
             "bearerAuth": []
@@ -2573,9 +2486,7 @@
       "get": {
         "summary": "Get all bookings",
         "description": "Retrieve a paginated list of all service bookings. Can be filtered by status, date range, or customer. Supports different views for customers vs companies.",
-        "tags": [
-          "Booking"
-        ],
+        "tags": ["Booking"],
         "security": [
           {
             "bearerAuth": []
@@ -2587,12 +2498,7 @@
             "name": "status",
             "schema": {
               "type": "string",
-              "enum": [
-                "UPCOMING",
-                "ONGOING",
-                "COMPLETED",
-                "CANCELLED"
-              ]
+              "enum": ["UPCOMING", "ONGOING", "COMPLETED", "CANCELLED"]
             },
             "description": "Filter bookings by status",
             "example": "UPCOMING"
@@ -2732,9 +2638,7 @@
       "get": {
         "summary": "Get booking details by ID",
         "description": "Retrieve comprehensive details about a specific booking including customer info, service details, scheduling, and payment information.",
-        "tags": [
-          "Booking"
-        ],
+        "tags": ["Booking"],
         "security": [
           {
             "bearerAuth": []
@@ -2792,9 +2696,7 @@
       "post": {
         "summary": "Create a new service booking",
         "description": "Create a new confirmed service booking with set pricing. This is used when a customer accepts a quote and wants to schedule the service.",
-        "tags": [
-          "Booking"
-        ],
+        "tags": ["Booking"],
         "security": [
           {
             "bearerAuth": []
@@ -2865,9 +2767,7 @@
                     "description": "List of service IDs included in this booking",
                     "items": {
                       "type": "object",
-                      "required": [
-                        "id"
-                      ],
+                      "required": ["id"],
                       "properties": {
                         "id": {
                           "type": "string",
@@ -2882,9 +2782,7 @@
                     "description": "List of area/room IDs where service will be performed",
                     "items": {
                       "type": "object",
-                      "required": [
-                        "id"
-                      ],
+                      "required": ["id"],
                       "properties": {
                         "id": {
                           "type": "string",
@@ -2996,9 +2894,7 @@
       "put": {
         "summary": "Update booking details",
         "description": "Update an existing booking with new information such as schedule changes, status updates, or additional notes. Different fields can be updated based on user role.",
-        "tags": [
-          "Booking"
-        ],
+        "tags": ["Booking"],
         "security": [
           {
             "bearerAuth": []
@@ -3043,12 +2939,7 @@
                   },
                   "status": {
                     "type": "string",
-                    "enum": [
-                      "UPCOMING",
-                      "ONGOING",
-                      "COMPLETED",
-                      "CANCELLED"
-                    ],
+                    "enum": ["UPCOMING", "ONGOING", "COMPLETED", "CANCELLED"],
                     "example": "ONGOING"
                   },
                   "notes": {
@@ -3141,9 +3032,7 @@
       "delete": {
         "summary": "Delete a booking (Admin only)",
         "description": "Permanently delete a booking from the system. This action is typically restricted to admin users and should be used carefully as it cannot be undone.",
-        "tags": [
-          "Booking"
-        ],
+        "tags": ["Booking"],
         "security": [
           {
             "bearerAuth": []
@@ -3205,9 +3094,7 @@
       "get": {
         "summary": "Get all service companies",
         "description": "Retrieve a paginated list of all service provider companies on the Sayenly platform. Can be filtered by services offered, location, or rating.",
-        "tags": [
-          "Company"
-        ],
+        "tags": ["Company"],
         "security": [
           {
             "bearerAuth": []
@@ -3332,9 +3219,7 @@
       "get": {
         "summary": "Get company details by ID",
         "description": "Retrieve comprehensive information about a specific service provider company including services offered, portfolio, reviews, and contact details.",
-        "tags": [
-          "Company"
-        ],
+        "tags": ["Company"],
         "security": [
           {
             "bearerAuth": []
@@ -3391,9 +3276,7 @@
       "post": {
         "summary": "Register a new service company (Admin only)",
         "description": "Add a new service provider company to the Sayenly platform. This endpoint is restricted to admin users for company onboarding.",
-        "tags": [
-          "Company"
-        ],
+        "tags": ["Company"],
         "security": [
           {
             "bearerAuth": []
@@ -3434,10 +3317,7 @@
                       "$ref": "#/components/schemas/PhoneNumber"
                     },
                     "description": "Business phone numbers",
-                    "example": [
-                      "+971501111111",
-                      "+97142345678"
-                    ]
+                    "example": ["+971501111111", "+97142345678"]
                   },
                   "emailAddresses": {
                     "type": "array",
@@ -3445,10 +3325,7 @@
                       "$ref": "#/components/schemas/Email"
                     },
                     "description": "Business email addresses",
-                    "example": [
-                      "info@cooltech.ae",
-                      "support@cooltech.ae"
-                    ]
+                    "example": ["info@cooltech.ae", "support@cooltech.ae"]
                   },
                   "addresses": {
                     "type": "array",
@@ -3456,9 +3333,7 @@
                       "type": "string"
                     },
                     "description": "Physical business addresses",
-                    "example": [
-                      "Office 123, Business Bay, Dubai, UAE"
-                    ]
+                    "example": ["Office 123, Business Bay, Dubai, UAE"]
                   },
                   "description": {
                     "type": "string",
@@ -3475,9 +3350,7 @@
                     "description": "List of service IDs this company provides",
                     "items": {
                       "type": "object",
-                      "required": [
-                        "id"
-                      ],
+                      "required": ["id"],
                       "properties": {
                         "id": {
                           "$ref": "#/components/schemas/UUID"
@@ -3525,15 +3398,9 @@
                   "value": {
                     "name": "CoolTech HVAC Solutions LLC",
                     "nameAr": "شركة كول تك للحلول المناخية",
-                    "phoneNumbers": [
-                      "+971501111111"
-                    ],
-                    "emailAddresses": [
-                      "info@cooltech.ae"
-                    ],
-                    "addresses": [
-                      "Office 123, Business Bay, Dubai, UAE"
-                    ],
+                    "phoneNumbers": ["+971501111111"],
+                    "emailAddresses": ["info@cooltech.ae"],
+                    "addresses": ["Office 123, Business Bay, Dubai, UAE"],
                     "description": "Professional HVAC services in Dubai",
                     "descriptionAr": "خدمات التكييف المهنية في دبي",
                     "isActive": true
@@ -3544,15 +3411,9 @@
                   "value": {
                     "name": "AquaFix Plumbing Services",
                     "nameAr": "خدمات أكوا فيكس للسباكة",
-                    "phoneNumbers": [
-                      "+971502222222"
-                    ],
-                    "emailAddresses": [
-                      "info@aquafix.ae"
-                    ],
-                    "addresses": [
-                      "Workshop 456, Al Quoz, Dubai, UAE"
-                    ],
+                    "phoneNumbers": ["+971502222222"],
+                    "emailAddresses": ["info@aquafix.ae"],
+                    "addresses": ["Workshop 456, Al Quoz, Dubai, UAE"],
                     "description": "Expert plumbing solutions for homes and offices",
                     "descriptionAr": "حلول السباكة الخبيرة للمنازل والمكاتب",
                     "isActive": true
@@ -3610,9 +3471,7 @@
       "put": {
         "summary": "Update company information",
         "description": "Update an existing company's profile information including contact details, services offered, and business information.",
-        "tags": [
-          "Company"
-        ],
+        "tags": ["Company"],
         "security": [
           {
             "bearerAuth": []
@@ -3654,20 +3513,14 @@
                     "items": {
                       "type": "string"
                     },
-                    "example": [
-                      "+971501111111",
-                      "+97142345678"
-                    ]
+                    "example": ["+971501111111", "+97142345678"]
                   },
                   "emailAddresses": {
                     "type": "array",
                     "items": {
                       "type": "string"
                     },
-                    "example": [
-                      "info@cooltech.ae",
-                      "support@cooltech.ae"
-                    ]
+                    "example": ["info@cooltech.ae", "support@cooltech.ae"]
                   },
                   "description": {
                     "type": "string",
@@ -3749,9 +3602,7 @@
       "delete": {
         "summary": "Delete a company (Admin only)",
         "description": "Permanently remove a service provider company from the platform. This action cannot be undone and will affect all associated bookings and orders.",
-        "tags": [
-          "Company"
-        ],
+        "tags": ["Company"],
         "security": [
           {
             "bearerAuth": []
@@ -3812,9 +3663,7 @@
       "get": {
         "summary": "Get all frequently asked questions",
         "description": "Retrieve a list of all FAQs organized by category. This endpoint supports filtering and sorting to help users find relevant information quickly.",
-        "tags": [
-          "FAQ"
-        ],
+        "tags": ["FAQ"],
         "parameters": [
           {
             "in": "query",
@@ -3856,11 +3705,7 @@
             "name": "sortBy",
             "schema": {
               "type": "string",
-              "enum": [
-                "priority",
-                "popularity",
-                "recent"
-              ]
+              "enum": ["priority", "popularity", "recent"]
             },
             "description": "Sort FAQs by different criteria",
             "example": "priority"
@@ -3971,9 +3816,7 @@
       "get": {
         "summary": "Get FAQ details by ID",
         "description": "Retrieve detailed information about a specific FAQ including view count and related questions.",
-        "tags": [
-          "FAQ"
-        ],
+        "tags": ["FAQ"],
         "security": [
           {
             "bearerAuth": []
@@ -4030,9 +3873,7 @@
       "post": {
         "summary": "Create a new FAQ (Admin only)",
         "description": "Add a new frequently asked question to help users understand the platform better. This endpoint is restricted to admin users.",
-        "tags": [
-          "FAQ"
-        ],
+        "tags": ["FAQ"],
         "security": [
           {
             "bearerAuth": []
@@ -4103,11 +3944,7 @@
                       "type": "string"
                     },
                     "description": "Tags for categorization and search",
-                    "example": [
-                      "cancel",
-                      "booking",
-                      "refund"
-                    ]
+                    "example": ["cancel", "booking", "refund"]
                   },
                   "relatedFAQs": {
                     "type": "array",
@@ -4115,9 +3952,7 @@
                       "$ref": "#/components/schemas/UUID"
                     },
                     "description": "IDs of related FAQ items",
-                    "example": [
-                      "456f7890-a12b-34c5-d678-901234567890"
-                    ]
+                    "example": ["456f7890-a12b-34c5-d678-901234567890"]
                   }
                 }
               },
@@ -4131,11 +3966,7 @@
                     "answerAr": "يمكنك إلغاء حجزك قبل ساعتين من الوقت المحدد.",
                     "category": "BOOKING",
                     "priority": 5,
-                    "tags": [
-                      "cancel",
-                      "booking",
-                      "refund"
-                    ],
+                    "tags": ["cancel", "booking", "refund"],
                     "isActive": true
                   }
                 },
@@ -4148,11 +3979,7 @@
                     "answerAr": "نحن نقبل النقد وبطاقات الائتمان والمدفوعات الإلكترونية.",
                     "category": "PAYMENT",
                     "priority": 3,
-                    "tags": [
-                      "payment",
-                      "credit card",
-                      "cash"
-                    ],
+                    "tags": ["payment", "credit card", "cash"],
                     "isActive": true
                   }
                 }
@@ -4203,9 +4030,7 @@
       "put": {
         "summary": "Update FAQ information (Admin only)",
         "description": "Update an existing FAQ's content, category, or visibility settings.",
-        "tags": [
-          "FAQ"
-        ],
+        "tags": ["FAQ"],
         "security": [
           {
             "bearerAuth": []
@@ -4271,11 +4096,7 @@
                     "items": {
                       "type": "string"
                     },
-                    "example": [
-                      "reschedule",
-                      "booking",
-                      "time change"
-                    ]
+                    "example": ["reschedule", "booking", "time change"]
                   }
                 }
               },
@@ -4286,11 +4107,7 @@
                     "question": "How do I reschedule a booking?",
                     "answer": "You can reschedule your booking up to 4 hours before the scheduled time.",
                     "priority": 3,
-                    "tags": [
-                      "reschedule",
-                      "booking",
-                      "time change"
-                    ]
+                    "tags": ["reschedule", "booking", "time change"]
                   }
                 }
               }
@@ -4343,9 +4160,7 @@
       "delete": {
         "summary": "Delete an FAQ (Admin only)",
         "description": "Permanently remove an FAQ from the platform. This action cannot be undone.",
-        "tags": [
-          "FAQ"
-        ],
+        "tags": ["FAQ"],
         "security": [
           {
             "bearerAuth": []
@@ -4406,9 +4221,7 @@
       "get": {
         "summary": "Get all user notifications",
         "description": "Retrieve a paginated list of notifications for the authenticated user. Supports filtering by read status, type, priority, and date range.",
-        "tags": [
-          "Notification"
-        ],
+        "tags": ["Notification"],
         "security": [
           {
             "bearerAuth": []
@@ -4447,12 +4260,7 @@
             "name": "priority",
             "schema": {
               "type": "string",
-              "enum": [
-                "LOW",
-                "NORMAL",
-                "HIGH",
-                "URGENT"
-              ]
+              "enum": ["LOW", "NORMAL", "HIGH", "URGENT"]
             },
             "description": "Filter notifications by priority level",
             "example": "HIGH"
@@ -4599,9 +4407,7 @@
       "get": {
         "summary": "Get notification details by ID",
         "description": "Retrieve detailed information about a specific notification. Automatically marks the notification as read when accessed.",
-        "tags": [
-          "Notification"
-        ],
+        "tags": ["Notification"],
         "security": [
           {
             "bearerAuth": []
@@ -4655,9 +4461,7 @@
       "post": {
         "summary": "Create a new notification",
         "description": "Create and send a new notification to a specific user or globally to all users. Supports immediate delivery or scheduled sending with rich content including images and actions.",
-        "tags": [
-          "Notification"
-        ],
+        "tags": ["Notification"],
         "security": [
           {
             "bearerAuth": []
@@ -4669,11 +4473,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "title",
-                  "message",
-                  "type"
-                ],
+                "required": ["title", "message", "type"],
                 "properties": {
                   "title": {
                     "type": "string",
@@ -4715,12 +4515,7 @@
                   },
                   "priority": {
                     "type": "string",
-                    "enum": [
-                      "LOW",
-                      "NORMAL",
-                      "HIGH",
-                      "URGENT"
-                    ],
+                    "enum": ["LOW", "NORMAL", "HIGH", "URGENT"],
                     "default": "NORMAL",
                     "description": "Priority level of the notification",
                     "example": "HIGH"
@@ -4892,9 +4687,7 @@
       "put": {
         "summary": "Update notification status",
         "description": "Update notification properties such as read status, priority, or expiration. Primarily used for marking notifications as read/unread.",
-        "tags": [
-          "Notification"
-        ],
+        "tags": ["Notification"],
         "security": [
           {
             "bearerAuth": []
@@ -4926,12 +4719,7 @@
                   },
                   "priority": {
                     "type": "string",
-                    "enum": [
-                      "LOW",
-                      "NORMAL",
-                      "HIGH",
-                      "URGENT"
-                    ],
+                    "enum": ["LOW", "NORMAL", "HIGH", "URGENT"],
                     "description": "Update priority level"
                   },
                   "expiresAt": {
@@ -5002,9 +4790,7 @@
       "delete": {
         "summary": "Delete a notification",
         "description": "Permanently delete a notification. Only the notification recipient or an admin can delete notifications.",
-        "tags": [
-          "Notification"
-        ],
+        "tags": ["Notification"],
         "security": [
           {
             "bearerAuth": []
@@ -5062,9 +4848,7 @@
       "get": {
         "summary": "Get all service orders",
         "description": "Retrieve a paginated list of all service orders with filtering options. Different views are available for customers vs companies vs admins.",
-        "tags": [
-          "Order"
-        ],
+        "tags": ["Order"],
         "security": [
           {
             "bearerAuth": []
@@ -5076,13 +4860,7 @@
             "name": "status",
             "schema": {
               "type": "string",
-              "enum": [
-                "PENDING",
-                "QUOTED",
-                "ACCEPTED",
-                "REJECTED",
-                "EXPIRED"
-              ]
+              "enum": ["PENDING", "QUOTED", "ACCEPTED", "REJECTED", "EXPIRED"]
             },
             "description": "Filter orders by status",
             "example": "PENDING"
@@ -5100,12 +4878,7 @@
             "name": "urgencyLevel",
             "schema": {
               "type": "string",
-              "enum": [
-                "LOW",
-                "MEDIUM",
-                "HIGH",
-                "EMERGENCY"
-              ]
+              "enum": ["LOW", "MEDIUM", "HIGH", "EMERGENCY"]
             },
             "description": "Filter orders by urgency level",
             "example": "HIGH"
@@ -5243,9 +5016,7 @@
       "get": {
         "summary": "Get order details by ID",
         "description": "Retrieve comprehensive details about a specific order including all quotes received, customer information, and status history.",
-        "tags": [
-          "Order"
-        ],
+        "tags": ["Order"],
         "security": [
           {
             "bearerAuth": []
@@ -5302,9 +5073,7 @@
       "post": {
         "summary": "Create a new service order",
         "description": "Submit a new service request order. This is the first step in the booking process where customers describe their service needs and receive quotes from companies.",
-        "tags": [
-          "Order"
-        ],
+        "tags": ["Order"],
         "security": [
           {
             "bearerAuth": []
@@ -5361,9 +5130,7 @@
                     "description": "List of service IDs needed for this order",
                     "items": {
                       "type": "object",
-                      "required": [
-                        "id"
-                      ],
+                      "required": ["id"],
                       "properties": {
                         "id": {
                           "$ref": "#/components/schemas/UUID"
@@ -5376,9 +5143,7 @@
                     "description": "List of area/room IDs where service will be performed",
                     "items": {
                       "type": "object",
-                      "required": [
-                        "id"
-                      ],
+                      "required": ["id"],
                       "properties": {
                         "id": {
                           "$ref": "#/components/schemas/UUID"
@@ -5388,12 +5153,7 @@
                   },
                   "urgencyLevel": {
                     "type": "string",
-                    "enum": [
-                      "LOW",
-                      "MEDIUM",
-                      "HIGH",
-                      "EMERGENCY"
-                    ],
+                    "enum": ["LOW", "MEDIUM", "HIGH", "EMERGENCY"],
                     "default": "MEDIUM",
                     "description": "Urgency level of the service request",
                     "example": "HIGH"
@@ -5511,9 +5271,7 @@
       "put": {
         "summary": "Update order information",
         "description": "Update an existing order with new information or status changes. Different fields can be updated based on user role and order status.",
-        "tags": [
-          "Order"
-        ],
+        "tags": ["Order"],
         "security": [
           {
             "bearerAuth": []
@@ -5564,12 +5322,7 @@
                   },
                   "urgencyLevel": {
                     "type": "string",
-                    "enum": [
-                      "LOW",
-                      "MEDIUM",
-                      "HIGH",
-                      "EMERGENCY"
-                    ],
+                    "enum": ["LOW", "MEDIUM", "HIGH", "EMERGENCY"],
                     "example": "EMERGENCY"
                   },
                   "notes": {
@@ -5668,9 +5421,7 @@
       "delete": {
         "summary": "Delete an order (Admin only)",
         "description": "Permanently remove an order from the system. This action is typically restricted to admin users and should be used carefully as it cannot be undone.",
-        "tags": [
-          "Order"
-        ],
+        "tags": ["Order"],
         "security": [
           {
             "bearerAuth": []
@@ -5731,9 +5482,7 @@
       "get": {
         "summary": "Get all project showcases",
         "description": "Retrieve a paginated list of all project showcases on the Sayenly platform. These projects demonstrate the quality of work by service providers.",
-        "tags": [
-          "Project"
-        ],
+        "tags": ["Project"],
         "security": [
           {
             "bearerAuth": []
@@ -5847,9 +5596,7 @@
       "get": {
         "summary": "Get project showcase details",
         "description": "Retrieve detailed information about a specific project showcase, including before/after images, services used, and project timeline.",
-        "tags": [
-          "Project"
-        ],
+        "tags": ["Project"],
         "security": [
           {
             "bearerAuth": []
@@ -5906,9 +5653,7 @@
       "post": {
         "summary": "Create a new project showcase (Admin/Company)",
         "description": "Add a new project to the showcase portfolio. This endpoint allows service providers and admins to feature completed projects with before/after photos.",
-        "tags": [
-          "Project"
-        ],
+        "tags": ["Project"],
         "security": [
           {
             "bearerAuth": []
@@ -5985,9 +5730,7 @@
                     "description": "Services showcased in this project",
                     "items": {
                       "type": "object",
-                      "required": [
-                        "id"
-                      ],
+                      "required": ["id"],
                       "properties": {
                         "id": {
                           "$ref": "#/components/schemas/UUID"
@@ -6000,9 +5743,7 @@
                     "description": "Areas/rooms covered in this project",
                     "items": {
                       "type": "object",
-                      "required": [
-                        "id"
-                      ],
+                      "required": ["id"],
                       "properties": {
                         "id": {
                           "$ref": "#/components/schemas/UUID"
@@ -6088,9 +5829,7 @@
       "put": {
         "summary": "Update project showcase (Admin/Company)",
         "description": "Update an existing project showcase with new images, descriptions, or project details.",
-        "tags": [
-          "Project"
-        ],
+        "tags": ["Project"],
         "security": [
           {
             "bearerAuth": []
@@ -6208,9 +5947,7 @@
       "delete": {
         "summary": "Delete project showcase (Admin/Company)",
         "description": "Permanently remove a project from the showcase portfolio. This action cannot be undone.",
-        "tags": [
-          "Project"
-        ],
+        "tags": ["Project"],
         "security": [
           {
             "bearerAuth": []
@@ -6271,9 +6008,7 @@
       "get": {
         "summary": "Get all customer reviews",
         "description": "Retrieve a paginated list of customer reviews with filtering options. Reviews can be filtered by company, rating, verification status, and date range.",
-        "tags": [
-          "Review"
-        ],
+        "tags": ["Review"],
         "security": [
           {
             "bearerAuth": []
@@ -6331,11 +6066,7 @@
             "name": "sortBy",
             "schema": {
               "type": "string",
-              "enum": [
-                "rating",
-                "date",
-                "helpful"
-              ]
+              "enum": ["rating", "date", "helpful"]
             },
             "description": "Sort reviews by different criteria",
             "example": "date"
@@ -6345,10 +6076,7 @@
             "name": "order",
             "schema": {
               "type": "string",
-              "enum": [
-                "asc",
-                "desc"
-              ]
+              "enum": ["asc", "desc"]
             },
             "description": "Sort order (ascending or descending)",
             "example": "desc"
@@ -6471,9 +6199,7 @@
       "get": {
         "summary": "Get review details by ID",
         "description": "Retrieve detailed information about a specific review including related booking and customer information.",
-        "tags": [
-          "Review"
-        ],
+        "tags": ["Review"],
         "security": [
           {
             "bearerAuth": []
@@ -6527,9 +6253,7 @@
       "post": {
         "summary": "Create a new customer review",
         "description": "Submit a comprehensive review for a completed service booking. Reviews help other customers make informed decisions and provide valuable feedback to service providers.",
-        "tags": [
-          "Review"
-        ],
+        "tags": ["Review"],
         "security": [
           {
             "bearerAuth": []
@@ -6541,11 +6265,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "rating",
-                  "review",
-                  "bookingId"
-                ],
+                "required": ["rating", "review", "bookingId"],
                 "properties": {
                   "rating": {
                     "type": "number",
@@ -6708,9 +6428,7 @@
       "put": {
         "summary": "Update an existing review",
         "description": "Update a previously submitted review. Only the customer who created the review can update it within a limited time period after submission.",
-        "tags": [
-          "Review"
-        ],
+        "tags": ["Review"],
         "security": [
           {
             "bearerAuth": []
@@ -6851,9 +6569,7 @@
       "delete": {
         "summary": "Delete a review",
         "description": "Delete a review. Only the customer who created the review or an admin can delete it. This action is irreversible.",
-        "tags": [
-          "Review"
-        ],
+        "tags": ["Review"],
         "security": [
           {
             "bearerAuth": []
@@ -6911,9 +6627,7 @@
       "get": {
         "summary": "Get all available services",
         "description": "Retrieve a list of all home services available on the Sayenly platform. This endpoint supports filtering and pagination for better performance.",
-        "tags": [
-          "Service"
-        ],
+        "tags": ["Service"],
         "parameters": [
           {
             "in": "query",
@@ -7012,9 +6726,7 @@
       "get": {
         "summary": "Get service details by ID",
         "description": "Retrieve detailed information about a specific service, including associated projects, companies, and pricing information.",
-        "tags": [
-          "Service"
-        ],
+        "tags": ["Service"],
         "security": [
           {
             "bearerAuth": []
@@ -7072,9 +6784,7 @@
       "post": {
         "summary": "Create a new service (Admin only)",
         "description": "Add a new service to the Sayenly platform. This endpoint is restricted to admin users and allows creation of comprehensive service profiles.",
-        "tags": [
-          "Service"
-        ],
+        "tags": ["Service"],
         "security": [
           {
             "bearerAuth": []
@@ -7136,9 +6846,7 @@
                     "description": "List of project IDs to associate with this service",
                     "items": {
                       "type": "object",
-                      "required": [
-                        "id"
-                      ],
+                      "required": ["id"],
                       "properties": {
                         "id": {
                           "type": "string",
@@ -7153,9 +6861,7 @@
                     "description": "List of company IDs certified to provide this service",
                     "items": {
                       "type": "object",
-                      "required": [
-                        "id"
-                      ],
+                      "required": ["id"],
                       "properties": {
                         "id": {
                           "type": "string",
@@ -7237,9 +6943,7 @@
       "put": {
         "summary": "Update service information (Admin only)",
         "description": "Update an existing service's information including descriptions, images, and associations.",
-        "tags": [
-          "Service"
-        ],
+        "tags": ["Service"],
         "security": [
           {
             "bearerAuth": []
@@ -7356,9 +7060,7 @@
       "delete": {
         "summary": "Delete a service (Admin only)",
         "description": "Permanently delete a service from the platform. This action cannot be undone and will affect all associated bookings and orders.",
-        "tags": [
-          "Service"
-        ],
+        "tags": ["Service"],
         "security": [
           {
             "bearerAuth": []
@@ -7420,18 +7122,14 @@
       "post": {
         "summary": "Send OTP for phone verification",
         "description": "Send a One-Time Password (OTP) to the provided phone number for verification. This is the first step in the phone-based authentication flow for both new user registration and existing user login.",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "phoneNumber"
-                ],
+                "required": ["phoneNumber"],
                 "properties": {
                   "phoneNumber": {
                     "$ref": "#/components/schemas/PhoneNumber"
@@ -7508,19 +7206,14 @@
       "post": {
         "summary": "Verify phone number with OTP",
         "description": "Verify the phone number using the OTP code received via SMS. Upon successful verification, returns a JWT token for authentication. If the phone number is not registered, a new user account will be created.",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "phoneNumber",
-                  "code"
-                ],
+                "required": ["phoneNumber", "code"],
                 "properties": {
                   "phoneNumber": {
                     "$ref": "#/components/schemas/PhoneNumber",
@@ -7625,13 +7318,11 @@
         }
       }
     },
-    "/api/auth/update-user": {
+    "/auth/update-user": {
       "post": {
         "summary": "Update authenticated user profile",
         "description": "Update the profile information of the currently authenticated user. All fields are optional.",
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "security": [
           {
             "bearerAuth": []
@@ -7662,10 +7353,7 @@
                   },
                   "nationality": {
                     "type": "string",
-                    "enum": [
-                      "EMIRATI",
-                      "OTHER"
-                    ],
+                    "enum": ["EMIRATI", "OTHER"],
                     "description": "User's nationality status",
                     "example": "EMIRATI"
                   },
@@ -7744,9 +7432,7 @@
       "get": {
         "summary": "Get all users (Admin only)",
         "description": "Retrieve a paginated list of all registered users. This endpoint is typically restricted to admin users.",
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "security": [
           {
             "bearerAuth": []
@@ -7835,9 +7521,7 @@
       "get": {
         "summary": "Get user by ID",
         "description": "Retrieve detailed information about a specific user by their unique ID.",
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "security": [
           {
             "bearerAuth": []
@@ -7895,9 +7579,7 @@
       "put": {
         "summary": "Update user profile (Admin)",
         "description": "Update a user's profile information. This endpoint is typically used by admin users to modify any user's profile.",
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "security": [
           {
             "bearerAuth": []
@@ -7944,10 +7626,7 @@
                   },
                   "nationality": {
                     "type": "string",
-                    "enum": [
-                      "EMIRATI",
-                      "OTHER"
-                    ],
+                    "enum": ["EMIRATI", "OTHER"],
                     "description": "User's nationality status",
                     "example": "EMIRATI"
                   },
@@ -8019,9 +7698,7 @@
     "/user/delete": {
       "delete": {
         "summary": "Delete a user",
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "security": [
           {
             "bearerAuth": []
@@ -8056,9 +7733,7 @@
       "post": {
         "summary": "Update the FCM token for a user (deprecated)",
         "description": "Update a single FCM token for push notifications. This method is deprecated, use register-device instead.",
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "security": [
           {
             "bearerAuth": []
@@ -8070,9 +7745,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "fcmToken"
-                ],
+                "required": ["fcmToken"],
                 "properties": {
                   "fcmToken": {
                     "type": "string",
@@ -8103,9 +7776,7 @@
       "post": {
         "summary": "Register device for push notifications",
         "description": "Register a device to receive push notifications. This allows users to receive notifications on multiple devices (phone, tablet, etc.). Each device must be registered individually.",
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "security": [
           {
             "bearerAuth": []
@@ -8117,9 +7788,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "deviceToken"
-                ],
+                "required": ["deviceToken"],
                 "properties": {
                   "deviceToken": {
                     "type": "string",
@@ -8133,11 +7802,7 @@
                       "platform": {
                         "type": "string",
                         "description": "The device platform",
-                        "enum": [
-                          "ios",
-                          "android",
-                          "web"
-                        ],
+                        "enum": ["ios", "android", "web"],
                         "example": "ios"
                       },
                       "osVersion": {
@@ -8230,9 +7895,7 @@
       "post": {
         "summary": "Unregister a device to stop push notifications",
         "description": "Unregister a device to stop receiving push notifications.",
-        "tags": [
-          "User"
-        ],
+        "tags": ["User"],
         "security": [
           {
             "bearerAuth": []
@@ -8244,9 +7907,7 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "deviceToken"
-                ],
+                "required": ["deviceToken"],
                 "properties": {
                   "deviceToken": {
                     "type": "string",

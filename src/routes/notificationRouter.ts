@@ -244,6 +244,16 @@ const notificationMethods: { [key: string]: MethodInfo } = {
       userId: joi.string().guid().optional(),
     },
   },
+  "read-one": {
+    httpMethod: "PUT",
+    controllerFunction: NotificationController.readOneNotificationController,
+    authFunction: isAuth,
+  },
+  "read-all": {
+    httpMethod: "PUT",
+    controllerFunction: NotificationController.readAllNotificationsController,
+    authFunction: isAuth,
+  },
   /**
    * @swagger
    * /notification/delete:
@@ -324,82 +334,6 @@ const notificationMethods: { [key: string]: MethodInfo } = {
     bodyValidation: {
       userId: joi.string().guid().required(),
       message: joi.string().required(),
-      route: joi.object().optional(),
-    },
-  },
-  /**
-   * @swagger
-   * /notification/send-bulk:
-   *   post:
-   *     summary: Send notifications to multiple users or all users
-   *     tags: [Notification]
-   *     security:
-   *       - bearerAuth: []
-   *     requestBody:
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             required:
-   *               - message
-   *             properties:
-   *               message:
-   *                 type: string
-   *                 description: The notification message
-   *               type:
-   *                 type: string
-   *                 enum: [SAYENLY, REMINDER, QUOTE]
-   *                 default: SAYENLY
-   *                 description: The type of notification
-   *               userIds:
-   *                 type: array
-   *                 items:
-   *                   type: string
-   *                   format: uuid
-   *                 description: Array of user IDs to send notifications to. If omitted, sends to all users.
-   *               route:
-   *                 type: object
-   *                 description: Optional route information for deep linking
-   *     responses:
-   *       200:
-   *         description: Notifications sent successfully
-   *         content:
-   *           application/json:
-   *             schema:
-   *               type: object
-   *               properties:
-   *                 success:
-   *                   type: boolean
-   *                 message:
-   *                   type: string
-   *                 results:
-   *                   type: object
-   *                   properties:
-   *                     total:
-   *                       type: integer
-   *                       description: Total number of users targeted
-   *                     dbNotifications:
-   *                       type: integer
-   *                       description: Number of database notifications sent
-   *                     pushNotifications:
-   *                       type: integer
-   *                       description: Number of push notifications sent
-   *       401:
-   *         description: Unauthorized
-   *       400:
-   *         description: Bad request - validation error
-   *       500:
-   *         description: Server error
-   */
-  "send-bulk": {
-    httpMethod: "POST",
-    controllerFunction: NotificationController.sendBulkNotificationController,
-    authFunction: isAuth,
-    bodyValidation: {
-      message: joi.string().required(),
-      type: joi.string().valid("SAYENLY", "REMINDER", "QUOTE").optional(),
-      userIds: joi.array().items(joi.string().guid()).optional(),
       route: joi.object().optional(),
     },
   },
