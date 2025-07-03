@@ -7,7 +7,6 @@ import { updateNotification } from "../services/notification/update";
 import { deleteNotification } from "../services/notification/delete";
 import { sendSystemNotification } from "../utils/notification";
 import AppError from "../errors/AppError";
-import { NotificationType } from "@prisma/client";
 import { updateAllNotifications } from "../services/notification/readAll";
 
 export const getAllNotificationsController = async (
@@ -15,7 +14,8 @@ export const getAllNotificationsController = async (
   res: Response
 ) => {
   try {
-    const notifications = await getAllNotifications();
+    const { id } = req.user;
+    const notifications = await getAllNotifications(id);
     return controllerReturn(notifications, req, res);
   } catch (error: any) {
     throw new AppError(error.message || "Failed to get notifications", 500);
@@ -99,7 +99,8 @@ export const readAllNotificationsController = async (
   res: Response
 ) => {
   try {
-    const notifications = await updateAllNotifications({ read: true });
+    const { id } = req.user;
+    const notifications = await updateAllNotifications({ read: true }, id);
     return controllerReturn(notifications, req, res);
   } catch (error: any) {
     throw new AppError(

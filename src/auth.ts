@@ -84,6 +84,9 @@ export const auth = betterAuth({
     admin(),
   ],
   user: {
+    deleteUser: {
+      enabled: true,
+    },
     additionalFields: {
       nationality: {
         type: "string",

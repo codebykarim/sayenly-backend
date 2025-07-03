@@ -3,10 +3,11 @@ import { PrismaClient, Prisma } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export const updateAllNotifications = async (
-  notificationData: Prisma.NotificationsUpdateInput
+  notificationData: Prisma.NotificationsUpdateInput,
+  userId: string
 ) => {
   return await prisma.notifications.updateMany({
-    where: { read: false },
+    where: { read: false, userId },
     data: notificationData,
   });
 };
