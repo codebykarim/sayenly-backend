@@ -14,18 +14,19 @@ export const updateFcmToken = async (userId: string, fcmToken: string) => {
     select: { settings: true },
   });
 
-  // Prepare the updated settings object
+  // Prepare the updated settings object (for backward compatibility)
   const currentSettings = (user?.settings as Record<string, any>) || {};
   const updatedSettings = {
     ...currentSettings,
     fcmToken,
   };
 
-  // Update the user record with the new settings
+  // Update the user record with the new settings AND the direct fcmToken field
   return await prisma.user.update({
     where: { id: userId },
     data: {
-      settings: updatedSettings,
+      fcmToken, // Store in direct fcmToken field (what sendPushToUser expects)
+      settings: updatedSettings, // Also store in settings for backward compatibility
     },
   });
 };

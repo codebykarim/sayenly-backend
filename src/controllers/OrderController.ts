@@ -124,6 +124,17 @@ export const updateOrderController = async (req: Request, res: Response) => {
       orderData.status == "WAITING_APPROVAL" &&
       orderData.quote != existingOrder.quote;
 
+    console.log("📊 Order update conditions:", {
+      orderId: id,
+      existingStatus: existingOrder.status,
+      newStatus: orderData.status,
+      existingQuote: existingOrder.quote,
+      newQuote: orderData.quote,
+      isQuoteAdded,
+      isQuoteUpdated,
+      clientId: existingOrder.clientId,
+    });
+
     // Check if status is changing to WAITING_APPROVAL
     const isStatusChangingToWaitingApproval =
       orderData.status === "APPROVED" &&
@@ -176,6 +187,13 @@ export const updateOrderController = async (req: Request, res: Response) => {
     }
 
     if (isQuoteAdded || isQuoteUpdated) {
+      console.log("🔔 Quote notification triggered:", {
+        isQuoteAdded,
+        isQuoteUpdated,
+        clientId: order.clientId,
+        quote: order.quote,
+      });
+
       const message = `A quote of AED ${order.quote} has been provided by Syana for your order.`;
       const messageAr = `تم تقديم عرض سعر بقيمة ${order.quote} درهم من قبل Syana لطلبك.`;
 
@@ -184,6 +202,12 @@ export const updateOrderController = async (req: Request, res: Response) => {
           console.error("Failed to send quote notification:", error);
         }
       );
+    } else {
+      console.log("📝 No quote notification needed:", {
+        isQuoteAdded,
+        isQuoteUpdated,
+        reason: "Conditions not met",
+      });
     }
 
     // Include booking creation status in response

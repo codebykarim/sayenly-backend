@@ -95,6 +95,12 @@ export const sendQuoteNotification = async (
   messageAr: string
 ) => {
   try {
+    console.log("📋 sendQuoteNotification called:", {
+      userId,
+      message,
+      messageAr,
+    });
+
     // Create notification with minimal database interaction
     const notification = await createNotification({
       message,
@@ -105,15 +111,24 @@ export const sendQuoteNotification = async (
       route: { path: "orders" },
     });
 
+    console.log("💾 Database notification created:", {
+      id: notification.id,
+      userId,
+      message: notification.message,
+    });
+
+    console.log("📱 Attempting to send push notification...");
+
     sendPushToUser(userId, "New Quote", "تسعيرة جديدة", message, messageAr, {
       path: "orders",
     }).catch((error) => {
-      console.error("Push notification failed:", error);
+      console.error("❌ Push notification failed:", error);
     });
 
+    console.log("✅ sendQuoteNotification completed successfully");
     return notification;
   } catch (error) {
-    console.error("Failed to send quote notification:", error);
+    console.error("❌ Failed to send quote notification:", error);
     // Return null instead of throwing to prevent blocking
     return null;
   }
