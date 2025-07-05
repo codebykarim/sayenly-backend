@@ -49,11 +49,6 @@ export const sendPushToUser = async (
   data?: Record<string, string>
 ) => {
   try {
-    // Ensure database connection is ready
-    await ensureConnection();
-
-    // Here we would fetch the user's FCM tokens from the database
-    // This is a placeholder - you'll need to adapt this to your actual user schema
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: { id: true, fcmToken: true, lang: true },
