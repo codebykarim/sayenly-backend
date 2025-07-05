@@ -105,13 +105,10 @@ export const sendQuoteNotification = async (
       route: { path: "orders" },
     });
 
-    // Send push notification in complete background - don't wait
-    process.nextTick(() => {
-      sendPushToUser(userId, "New Quote", "تسعيرة جديدة", message, messageAr, {
-        path: "orders",
-      }).catch((error) => {
-        console.error("Push notification failed:", error);
-      });
+    sendPushToUser(userId, "New Quote", "تسعيرة جديدة", message, messageAr, {
+      path: "orders",
+    }).catch((error) => {
+      console.error("Push notification failed:", error);
     });
 
     return notification;
