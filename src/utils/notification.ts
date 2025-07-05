@@ -119,9 +119,16 @@ export const sendQuoteNotification = async (
 
     console.log("📱 Attempting to send push notification...");
 
-    sendPushToUser(userId, "New Quote", "تسعيرة جديدة", message, messageAr, {
-      path: "orders",
-    }).catch((error) => {
+    await sendPushToUser(
+      userId,
+      "New Quote",
+      "تسعيرة جديدة",
+      message,
+      messageAr,
+      {
+        path: "orders",
+      }
+    ).catch((error) => {
       console.error("❌ Push notification failed:", error);
     });
 
