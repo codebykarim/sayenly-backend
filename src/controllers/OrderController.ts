@@ -197,11 +197,14 @@ export const updateOrderController = async (req: Request, res: Response) => {
       const message = `A quote of AED ${order.quote} has been provided by Syana for your order.`;
       const messageAr = `تم تقديم عرض سعر بقيمة ${order.quote} درهم من قبل Syana لطلبك.`;
 
-      await sendQuoteNotification(order.clientId, message, messageAr).catch(
-        (error) => {
-          console.error("Failed to send quote notification:", error);
-        }
-      );
+      await sendQuoteNotification(
+        order.clientId,
+        message,
+        messageAr,
+        order.id
+      ).catch((error) => {
+        console.error("Failed to send quote notification:", error);
+      });
     } else {
       console.log("📝 No quote notification needed:", {
         isQuoteAdded,

@@ -15,7 +15,15 @@ export const getAllNotificationsController = async (
 ) => {
   try {
     const { id } = req.user;
-    const notifications = await getAllNotifications(id);
+
+    // Extract pagination parameters from query string
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+
+    // Calculate skip value for Prisma
+    const skip = (page - 1) * limit;
+
+    const notifications = await getAllNotifications(id, { skip, take: limit });
     return controllerReturn(notifications, req, res);
   } catch (error: any) {
     throw new AppError(error.message || "Failed to get notifications", 500);

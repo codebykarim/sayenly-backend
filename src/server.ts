@@ -68,7 +68,7 @@ app.get("/api/docs.json", (req: Request, res: Response) => {
 
 app.use("/api", routes);
 
-app.use("/api/send-bookings-reminders", async (req: Request, res: Response) => {
+app.get("/api/send-bookings-reminders", async (req: Request, res: Response) => {
   try {
     const count = await processUpcomingBookingReminders();
     res.status(200).json({

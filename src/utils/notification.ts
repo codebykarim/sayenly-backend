@@ -52,7 +52,8 @@ export const sendSystemNotification = async (
 export const sendBookingReminder = async (
   userId: string,
   message: string,
-  messageAr: string
+  messageAr: string,
+  bookingId: string
 ) => {
   try {
     const notification = await createNotification({
@@ -61,7 +62,7 @@ export const sendBookingReminder = async (
       type: NotificationType.REMINDER,
       read: false,
       user: { connect: { id: userId } },
-      route: { path: "bookings" },
+      route: { bookingId: bookingId },
     });
 
     // Send push notification if possible
@@ -92,7 +93,8 @@ export const sendBookingReminder = async (
 export const sendQuoteNotification = async (
   userId: string,
   message: string,
-  messageAr: string
+  messageAr: string,
+  orderId: string
 ) => {
   try {
     console.log("📋 sendQuoteNotification called:", {
@@ -108,7 +110,7 @@ export const sendQuoteNotification = async (
       type: NotificationType.QUOTE,
       read: false,
       user: { connect: { id: userId } },
-      route: { path: "orders" },
+      route: { orderId: orderId },
     });
 
     console.log("💾 Database notification created:", {
@@ -126,7 +128,7 @@ export const sendQuoteNotification = async (
       message,
       messageAr,
       {
-        path: "orders",
+        orderId: orderId,
       }
     ).catch((error) => {
       console.error("❌ Push notification failed:", error);

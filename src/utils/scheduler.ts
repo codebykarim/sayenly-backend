@@ -44,10 +44,15 @@ export const processUpcomingBookingReminders = async () => {
         .map((service) => service.name)
         .join(", ");
 
-      const message = `Reminder: You have a booking scheduled tomorrow with Syana for ${serviceNames} at ${booking.schedule.toLocaleTimeString()}.`;
-      const messageAr = `تذكير: لديك حجز قريب بالتوقيت ${booking.schedule.toLocaleTimeString()} للخدمات ${serviceNames} مع Syana.`;
+      const message = `Reminder: You have a booking scheduled tomorrow with Syana for ${serviceNames.split(",").join("،")} at ${booking.schedule.toTimeString()}.`;
+      const messageAr = `تذكير: لديك حجز قريب بالتوقيت ${booking.schedule.toTimeString()} للخدمات ${serviceNames.split(",").join("،")} مع Syana.`;
 
-      await sendBookingReminder(booking.clientId, message, messageAr);
+      await sendBookingReminder(
+        booking.clientId,
+        message,
+        messageAr,
+        booking.id
+      );
       console.log(
         `Sent reminder notification for booking ${booking.id} to user ${booking.clientId}`
       );
