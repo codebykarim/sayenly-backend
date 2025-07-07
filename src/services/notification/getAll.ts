@@ -30,8 +30,6 @@ export const getAllNotifications = async (
       throw new AppError("Failed to get total notifications", 500);
     });
 
-  console.log(total);
-
   // Get paginated results
   const notifications = await prisma.notifications
     .findMany({
